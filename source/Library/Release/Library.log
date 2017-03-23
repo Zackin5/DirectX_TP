@@ -1,0 +1,46 @@
+﻿FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Content\Effects\BasicEffect.cso
+  Camera.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  ColorHelper.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  DrawableGameComponent.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  FirstPersonCamera.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  FpsComponent.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Game.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+Game.cpp(200): warning C4838: conversion from 'UINT' to 'LONG' requires a narrowing conversion
+  GameClock.cpp
+  GameComponent.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  GameException.cpp
+  GameTime.cpp
+  Keyboard.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  MatrixHelper.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Mouse.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  RenderStateHelper.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  ServiceContainer.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Utility.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  VectorHelper.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Library.vcxproj -> D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Library.lib
+  A subdirectory or file D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\..\lib\ already exists.
+          1 file(s) copied.
+  A subdirectory or file D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\..\content\ already exists.
+  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\source\Library\Content\Effects\BasicEffect.fx
+  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\source\Library\Content\Fonts\Arial_14_Regular.spritefont
+  2 File(s) copied
+  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Content\Effects\BasicEffect.cso
+  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Content\Effects\BasicEffect.fx
+  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Content\Fonts\Arial_14_Regular.spritefont
+  3 File(s) copied

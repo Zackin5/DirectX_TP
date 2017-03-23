@@ -1,0 +1,47 @@
+﻿FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\Debug\Content\Effects\BasicEffect.cso
+  VectorHelper.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Utility.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  ServiceContainer.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  RenderStateHelper.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Mouse.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  MatrixHelper.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Keyboard.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  GameTime.cpp
+  GameException.cpp
+  GameComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  GameClock.cpp
+  Game.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\jace\documents\my text files\college work\directx\chapter14\source\library\game.cpp(200): warning C4838: conversion from 'UINT' to 'LONG' requires a narrowing conversion
+  FpsComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  FirstPersonCamera.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  DrawableGameComponent.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  ColorHelper.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Camera.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Generating Code...
+  Library.vcxproj -> C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\Debug\Libraryd.lib
+  A subdirectory or file C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\..\lib\ already exists.
+          1 file(s) copied.
+  A subdirectory or file C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\..\content\ already exists.
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\source\Library\Content\Effects\BasicEffect.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\source\Library\Content\Fonts\Arial_14_Regular.spritefont
+  2 File(s) copied
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\Debug\Content\Effects\BasicEffect.cso
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\Debug\Content\Effects\BasicEffect.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\Debug\Content\Fonts\Arial_14_Regular.spritefont
+  3 File(s) copied
