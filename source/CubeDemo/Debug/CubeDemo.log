@@ -1,0 +1,38 @@
+﻿  A subdirectory or file C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\Debug\Content already exists.
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\..\content\Effects\BasicEffect.cso
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\..\content\Effects\BasicEffect.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\..\content\Fonts\Arial_14_Regular.spritefont
+  3 File(s) copied
+  RenderingGame.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Program.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  CubeDemo.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Generating Code...
+Effects11.lib(EffectAPI.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+Effects11.lib(EffectAPI.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+Effects11.lib(d3dxGlobal.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+Effects11.lib(d3dxGlobal.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+Effects11.lib(EffectNonRuntime.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+Effects11.lib(EffectNonRuntime.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+Effects11.lib(EffectLoad.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+Effects11.lib(EffectLoad.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+Effects11.lib(EffectReflection.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+Effects11.lib(EffectReflection.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+Effects11.lib(EffectRuntime.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+Effects11.lib(EffectRuntime.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+DirectXTK.lib(SpriteBatch.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+DirectXTK.lib(SpriteBatch.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+DirectXTK.lib(SpriteFont.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+DirectXTK.lib(SpriteFont.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+DirectXTK.lib(pch.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+DirectXTK.lib(pch.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+DirectXTK.lib(CommonStates.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+DirectXTK.lib(CommonStates.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+DirectXTK.lib(VertexTypes.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+DirectXTK.lib(VertexTypes.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+DirectXTK.lib(BinaryReader.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in CubeDemo.obj
+DirectXTK.lib(BinaryReader.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in CubeDemo.obj
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+C:\Users\Jace\Documents\My Text Files\College Work\DirectX\Chapter14\build\Debug\CubeDemo.exe : fatal error LNK1319: 24 mismatches detected
