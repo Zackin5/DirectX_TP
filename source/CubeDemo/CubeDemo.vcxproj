@@ -104,12 +104,6 @@ IF EXIST "$(ProjectDir)..\content" xcopy /E /Y "$(ProjectDir)Content" "$(OutDir)
     <ClInclude Include="StarWars.h" />
     <ClInclude Include="RenderingGame.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Resources\cup.cmo" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\Resources\cup.jpg" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
