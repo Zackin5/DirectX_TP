@@ -1,11 +1,16 @@
 ﻿FXC : warning X4717: Effects deprecated for D3DCompiler_47
   
-  compilation object save succeeded; see D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Content\Effects\BasicEffect.cso
+  compilation object save succeeded; see C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\BasicEffect.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\Skybox.cso
   Camera.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   ColorHelper.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   DrawableGameComponent.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Effect.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   FirstPersonCamera.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
@@ -21,26 +26,48 @@ Game.cpp(200): warning C4838: conversion from 'UINT' to 'LONG' requires a narrow
   GameTime.cpp
   Keyboard.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Material.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   MatrixHelper.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Mesh.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Model.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  ModelMaterial.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   Mouse.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Pass.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   RenderStateHelper.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Compiling...
   ServiceContainer.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Technique.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   Utility.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Variable.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   VectorHelper.cpp
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-  Library.vcxproj -> D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Library.lib
-  A subdirectory or file D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\..\lib\ already exists.
+  Library.vcxproj -> C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Library.lib
+  A subdirectory or file C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\lib\ already exists.
           1 file(s) copied.
-  A subdirectory or file D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\..\content\ already exists.
-  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\source\Library\Content\Effects\BasicEffect.fx
-  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\source\Library\Content\Fonts\Arial_14_Regular.spritefont
-  2 File(s) copied
-  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Content\Effects\BasicEffect.cso
-  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Content\Effects\BasicEffect.fx
-  D:\Documents\Regenbrecht Homework\DirectX\Chapter14\build\Release\Content\Fonts\Arial_14_Regular.spritefont
-  3 File(s) copied
+  A subdirectory or file C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\ already exists.
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Effects\BasicEffect.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Effects\Skybox.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Fonts\Arial_14_Regular.spritefont
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Models\Sphere.mtl
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Models\Sphere.obj
+  5 File(s) copied
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\BasicEffect.cso
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\BasicEffect.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\Skybox.cso
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\Skybox.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Fonts\Arial_14_Regular.spritefont
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Models\Sphere.mtl
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Models\Sphere.obj
+  7 File(s) copied

@@ -10,7 +10,7 @@ namespace Library
 
     const float Camera::DefaultFieldOfView = XM_PIDIV4;
     const float Camera::DefaultNearPlaneDistance = 0.01f;
-    const float Camera::DefaultFarPlaneDistance = 1000.0f;
+    const float Camera::DefaultFarPlaneDistance = 10000.0f;
 
     Camera::Camera(Game& game)
         : GameComponent(game),

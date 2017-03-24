@@ -1,0 +1,16 @@
+﻿  A subdirectory or file C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content already exists.
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\Effects\BasicEffect.cso
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\Effects\BasicEffect.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\Effects\Skybox.cso
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\Effects\Skybox.fx
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\Fonts\Arial_14_Regular.spritefont
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\Models\Sphere.mtl
+  C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\Models\Sphere.obj
+  7 File(s) copied
+  StarWars.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Program.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  RenderingGame.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+LINK : fatal error LNK1181: cannot open input file 'DirectXTK.lib'

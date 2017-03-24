@@ -33,6 +33,18 @@
     <Filter Include="Content\Effects">
       <UniqueIdentifier>{f22049ef-71c3-438d-858b-3ebb0c345046}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Models">
+      <UniqueIdentifier>{305d4317-de1d-4aa4-986a-46379557bffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Models">
+      <UniqueIdentifier>{b83ce037-b281-47e3-8dfd-c7c54b7c890b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Effects">
+      <UniqueIdentifier>{2a7c58cd-7b60-40b7-aff7-1376bee3bd6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Effects">
+      <UniqueIdentifier>{05758df0-6248-4902-8a86-4876b1eaf6a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mouse.h">
@@ -92,6 +104,33 @@
     <ClInclude Include="RenderStateHelper.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="ModelMaterial.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass.h">
+      <Filter>Header Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Technique.h">
+      <Filter>Header Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Variable.h">
+      <Filter>Header Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Header Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mouse.cpp">
@@ -145,9 +184,36 @@
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="ModelMaterial.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Source Files\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Technique.cpp">
+      <Filter>Source Files\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Variable.cpp">
+      <Filter>Source Files\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass.cpp">
+      <Filter>Source Files\Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="content\Effects\BasicEffect.fx">
+      <Filter>Content\Effects</Filter>
+    </FxCompile>
+    <FxCompile Include="content\Effects\Skybox.fx">
       <Filter>Content\Effects</Filter>
     </FxCompile>
   </ItemGroup>
