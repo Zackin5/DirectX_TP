@@ -4,6 +4,7 @@
 
 #include "Model.h"
 #include "Mesh.h"
+#include "WICTextureLoader.h"
 
 using namespace Library;
 
@@ -37,6 +38,17 @@ namespace Rendering
             _BasicEffectVertex(XMFLOAT4 position, XMFLOAT4 color)
                 : Position(position), Color(color) { }
         } BasicEffectVertex;
+
+		typedef struct _TextureMappingVertex
+		{
+			XMFLOAT4 Position;
+			XMFLOAT2 TextureCoordinates;
+
+			_TextureMappingVertex() { }
+
+			_TextureMappingVertex(XMFLOAT4 position, XMFLOAT2 textureCoordinates)
+				: Position(position), TextureCoordinates(textureCoordinates) { }
+		} TextureMappingVertex;
 
 		StarWars();
 		StarWars(const StarWars& rhs);

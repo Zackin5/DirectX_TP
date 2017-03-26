@@ -131,6 +131,9 @@
     <ClInclude Include="Skybox.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\WICTextureLoader\WICTextureLoader.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mouse.cpp">
@@ -207,6 +210,9 @@
     </ClCompile>
     <ClCompile Include="Pass.cpp">
       <Filter>Source Files\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WICTextureLoader\WICTextureLoader.cpp">
+      <Filter>Source Files\Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

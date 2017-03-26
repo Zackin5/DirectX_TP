@@ -1,5 +1,131 @@
-﻿Build started 3/24/2017 12:34:50 AM.
+﻿Build started 3/25/2017 10:34:56 PM.
+     1>Project "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Library.vcxproj" on node 2 (Rebuild target(s)).
+     1>_PrepareForClean:
+         Deleting file "Release\Library.tlog\Library.lastbuildstate".
+       InitializeBuildStatus:
+         Creating "Release\Library.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+       FxCompile:
+         C:\Program Files (x86)\Windows Kits\10\bin\x86\fxc.exe /nologo /E"main11" /T fx_5_0 /Fo "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\BasicEffect.cso" content\Effects\BasicEffect.fx 
+     1>FXC : warning X4717: Effects deprecated for D3DCompiler_47
+         
+         compilation object save succeeded; see C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\BasicEffect.cso
+         C:\Program Files (x86)\Windows Kits\10\bin\x86\fxc.exe /nologo /T fx_5_0 /Fo "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\Skybox.cso" content\Effects\Skybox.fx 
+     1>FXC : warning X4717: Effects deprecated for D3DCompiler_47
+         
+         compilation object save succeeded; see C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\Skybox.cso
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\source\DirectXMath-master\inc\\" /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um" /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared" /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\winrt" /IInclude\um /I"C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\source\FX11-master\\" /I"C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\source\DirectXTK-master\\" /I"C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\source\assimp\include\\" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR- /Fo"Release\\" /Fd"Release\Library.pdb" /Gd /TP /analyze- /errorReport:prompt ..\WICTextureLoader\WICTextureLoader.cpp Camera.cpp ColorHelper.cpp DrawableGameComponent.cpp Effect.cpp FirstPersonCamera.cpp FpsComponent.cpp Game.cpp GameClock.cpp GameComponent.cpp GameException.cpp GameTime.cpp Keyboard.cpp Material.cpp MatrixHelper.cpp Mesh.cpp Model.cpp ModelMaterial.cpp Mouse.cpp Pass.cpp RenderStateHelper.cpp ServiceContainer.cpp Technique.cpp Utility.cpp Variable.cpp VectorHelper.cpp
+         WICTextureLoader.cpp
+         Camera.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         ColorHelper.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         DrawableGameComponent.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Effect.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         FirstPersonCamera.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         FpsComponent.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Game.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+     1>Game.cpp(200): warning C4838: conversion from 'UINT' to 'LONG' requires a narrowing conversion
+         GameClock.cpp
+         GameComponent.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         GameException.cpp
+         GameTime.cpp
+         Keyboard.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Material.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         MatrixHelper.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Mesh.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Model.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         ModelMaterial.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Mouse.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Pass.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Compiling...
+         RenderStateHelper.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         ServiceContainer.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Technique.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Utility.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Variable.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         VectorHelper.cpp
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\Lib.exe /OUT:"C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Library.lib" /NOLOGO /LTCG Release\WICTextureLoader.obj
+         Release\Camera.obj
+         Release\ColorHelper.obj
+         Release\DrawableGameComponent.obj
+         Release\Effect.obj
+         Release\FirstPersonCamera.obj
+         Release\FpsComponent.obj
+         Release\Game.obj
+         Release\GameClock.obj
+         Release\GameComponent.obj
+         Release\GameException.obj
+         Release\GameTime.obj
+         Release\Keyboard.obj
+         Release\Material.obj
+         Release\MatrixHelper.obj
+         Release\Mesh.obj
+         Release\Model.obj
+         Release\ModelMaterial.obj
+         Release\Mouse.obj
+         Release\Pass.obj
+         Release\RenderStateHelper.obj
+         Release\ServiceContainer.obj
+         Release\Technique.obj
+         Release\Utility.obj
+         Release\Variable.obj
+         Release\VectorHelper.obj
+         Library.vcxproj -> C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Library.lib
+       PostBuildEvent:
+         mkdir "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\lib\"
+         copy "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Library.lib" "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\lib\"
+         
+         mkdir "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\"
+         IF EXIST "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content" xcopy /E /Y "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content" "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\"
+         IF EXIST "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content" xcopy /E /Y "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content" "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\"
+         :VCEnd
+         A subdirectory or file C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\lib\ already exists.
+                 1 file(s) copied.
+         A subdirectory or file C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\..\content\ already exists.
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Effects\BasicEffect.fx
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Effects\Skybox.fx
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Fonts\Arial_14_Regular.spritefont
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Models\Sphere.mtl
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Content\Models\Sphere.obj
+         5 File(s) copied
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\BasicEffect.cso
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\BasicEffect.fx
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\Skybox.cso
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Effects\Skybox.fx
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Fonts\Arial_14_Regular.spritefont
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Models\Skybox.mtl
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Models\Skybox.obj
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Models\Sphere.mtl
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Models\Sphere.obj
+         C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\build\Release\Content\Textures\Stars1HD.png
+         10 File(s) copied
+       FinalizeBuildStatus:
+         Deleting file "Release\Library.tlog\unsuccessfulbuild".
+         Touching "Release\Library.tlog\Library.lastbuildstate".
+     1>Done Building Project "C:\Users\Jace\Documents\My Text Files\College Work\DirectX\DirectX_TP\source\Library\Library.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.01
+Time Elapsed 00:00:45.46

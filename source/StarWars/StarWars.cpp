@@ -108,20 +108,25 @@ namespace Rendering
 		}
 	#pragma endregion
 
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
+		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Skybox.obj", true));
 
 		Mesh* mesh = model->Meshes().at(0);
 		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, &mVertexBuffer);
 		mesh->CreateIndexBuffer(&mIndexBuffer);
 		mIndexCount = mesh->Indices().size();
 
+		std::wstring textureName = model->Materials->Name;
+		if (FAILED(hr = DirectX::CreateWICTextureFromFile(mGame->Direct3DDevice(), mGame->Direct3DDeviceContext(), textureName.c_str(), nullptr, &mTextureShaderResourceView)))
+		{
+			throw GameException("CreateWICTextureFromFile() failed.", hr);
+		}
 	}
 
 
 	void StarWars::Update(const GameTime& gameTime)
 	{
-		mAngle += XM_PI * static_cast<float>(gameTime.ElapsedGameTime());
-		XMStoreFloat4x4(&mWorldMatrix, XMMatrixRotationAxis({ 1.0f,1.0f,1.0f,1.0f }, mAngle));
+		//mAngle += XM_PI * static_cast<float>(gameTime.ElapsedGameTime());
+		//XMStoreFloat4x4(&mWorldMatrix, XMMatrixRotationAxis({ 1.0f,1.0f,1.0f,1.0f }, mAngle));
 	}
 
 
@@ -150,33 +155,22 @@ namespace Rendering
 	{
 		const std::vector<XMFLOAT3>& sourceVertices = mesh.Vertices();
 
-		std::vector<BasicEffectVertex> vertices;
+		std::vector<TextureMappingVertex> vertices;
 		vertices.reserve(sourceVertices.size());
-		if (mesh.VertexColors().size() > 0)
-		{
-			std::vector<XMFLOAT4>* vertexColors = mesh.VertexColors().at(0);
-			assert(vertexColors->size() == sourceVertices.size());
 
-			for (UINT i = 0; i < sourceVertices.size(); i++)
-			{
-				XMFLOAT3 position = sourceVertices.at(i);
-				XMFLOAT4 color = vertexColors->at(i);
-				vertices.push_back(BasicEffectVertex(XMFLOAT4(position.x, position.y, position.z, 1.0f), color));
-			}
-		}
-		else
+		std::vector<XMFLOAT3>* textureCoordinates = mesh.TextureCoordinates().at(0);
+		assert(textureCoordinates->size() == sourceVertices.size());
+
+		for (UINT i = 0; i < sourceVertices.size(); i++)
 		{
-			for (UINT i = 0; i < sourceVertices.size(); i++)
-			{
-				XMFLOAT3 position = sourceVertices.at(i);
-				XMFLOAT4 color = ColorHelper::RandomColor();
-				vertices.push_back(BasicEffectVertex(XMFLOAT4(position.x, position.y, position.z, 1.0f), color));
-			}
+			XMFLOAT3 position = sourceVertices.at(i);
+			XMFLOAT3 uv = textureCoordinates->at(i);
+			vertices.push_back(TextureMappingVertex(XMFLOAT4(position.x, position.y, position.z, 1.0f), XMFLOAT2(uv.x, uv.y)));
 		}
 
 		D3D11_BUFFER_DESC vertexBufferDesc;
 		ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
-		vertexBufferDesc.ByteWidth = sizeof(BasicEffectVertex) * vertices.size();
+		vertexBufferDesc.ByteWidth = sizeof(TextureMappingVertex) * vertices.size();
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
