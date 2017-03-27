@@ -124,8 +124,8 @@ namespace Rendering
 	#pragma endregion
 
 
-		//CreateModel("Content\\Models\\SpaceShipTemp.obj", L"Content\\Textures\\Stars1HD.png", true);
-		CreateModel("Content\\Models\\Sphere.obj", L"Content\\Textures\\EarthComposite.jpg", true);
+		CreateModel("Content\\Models\\SpaceShipTemp.obj", L"Content\\Textures\\EarthComposite.jpg");
+		CreateModel("Content\\Models\\Cube.obj", L"Content\\Textures\\EarthComposite.jpg", true);
 	}
 
 
@@ -200,12 +200,12 @@ namespace Rendering
 		Mesh* mesh = model->Meshes().at(0);
 		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, &mVertexBuffer);
 		mesh->CreateIndexBuffer(&mIndexBuffer);
-		mIndexCount = mesh->Indices().size();
+		mIndexCount += mesh->Indices().size();
 
 		std::wstring textureName = textureFile;
 		if (FAILED(hr = DirectX::CreateWICTextureFromFile(mGame->Direct3DDevice(), mGame->Direct3DDeviceContext(), textureName.c_str(), nullptr, &mTextureShaderResourceView)))
 		{
-			throw GameException("CreateWICTextureFromFile() failed.\nTHNAKS OBAMA", hr);
+			throw GameException("CreateWICTextureFromFile() failed.\nTRUMP SAYS CHECK UR TEXTURE PATHS", hr);
 		}
 
 	}
