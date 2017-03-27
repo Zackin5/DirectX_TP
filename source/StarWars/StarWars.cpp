@@ -50,7 +50,7 @@ namespace Rendering
 
 		ID3D10Blob* compiledShader = nullptr;
 		ID3D10Blob* errorMessages = nullptr;
-		HRESULT hr = D3DCompileFromFile(L"Content\\Effects\\BasicEffect.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
+		HRESULT hr = D3DCompileFromFile(L"Content\\Effects\\TextureMapping.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
 		if (FAILED(hr))
 		{
 			char* errorMessage = (errorMessages != nullptr ? (char*)errorMessages->GetBufferPointer() : "D3DX11CompileFromFile() failed");
@@ -94,20 +94,32 @@ namespace Rendering
 			throw GameException("Invalid effect variable cast.");
 		}
 
-		// Create the input layout
-		D3DX11_PASS_DESC passDesc;
-		mPass->GetDesc(&passDesc);
-
-		D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] =
+		variable = mEffect->GetVariableByName("ColorTexture");
+		if (variable == nullptr)
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
-
-		if (FAILED(hr = mGame->Direct3DDevice()->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &mInputLayout)))
-		{
-			throw GameException("ID3D11Device::CreateInputLayout() failed.", hr);
+			throw GameException("ID3DX11Effect::GetVariableByName() could not find the specified variable.", hr);
 		}
+
+		mColorTextureVariable = variable->AsShaderResource();
+		if (mColorTextureVariable->IsValid() == false)
+		{
+			throw GameException("Invalid effect variable cast.");
+		}
+
+		// Create the input layout
+        D3DX11_PASS_DESC passDesc;
+        mPass->GetDesc(&passDesc);
+
+        D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
+
+        if (FAILED(hr = mGame->Direct3DDevice()->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &mInputLayout)))
+        {
+            throw GameException("ID3D11Device::CreateInputLayout() failed.", hr);
+        }
 	#pragma endregion
 
 		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
