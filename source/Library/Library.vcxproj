@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\WICTextureLoader\WICTextureLoader.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorHelper.h" />
     <ClInclude Include="Common.h" />
@@ -40,9 +39,9 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Variable.h" />
     <ClInclude Include="VectorHelper.h" />
+    <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\WICTextureLoader\WICTextureLoader.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorHelper.cpp" />
     <ClCompile Include="DrawableGameComponent.cpp" />
@@ -68,6 +67,7 @@
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Variable.cpp" />
     <ClCompile Include="VectorHelper.cpp" />
+    <ClCompile Include="WICTextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="content\Effects\BasicEffect.fx">

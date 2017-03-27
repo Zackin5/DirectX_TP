@@ -13,7 +13,7 @@ namespace Rendering
 
 	StarWars::StarWars(Game& game, Camera& camera)
 		: DrawableGameComponent(game, camera),  
-		  mEffect(nullptr), mTechnique(nullptr), mPass(nullptr), mWvpVariable(nullptr),
+		  mEffect(nullptr), mTechnique(nullptr), mPass(nullptr), mWvpVariable(nullptr), mTextureShaderResourceView(nullptr), mColorTextureVariable(nullptr),
 		  mInputLayout(nullptr), mWorldMatrix(MatrixHelper::Identity), mVertexBuffer(nullptr), mIndexBuffer(nullptr), mIndexCount(0)
 	{
 	}
@@ -21,6 +21,8 @@ namespace Rendering
 
 	StarWars::~StarWars()
 	{
+		ReleaseObject(mColorTextureVariable);
+		ReleaseObject(mTextureShaderResourceView);
 		ReleaseObject(mWvpVariable);
         ReleaseObject(mPass);
         ReleaseObject(mTechnique);
@@ -108,17 +110,17 @@ namespace Rendering
 		}
 	#pragma endregion
 
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Skybox.obj", true));
+		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
 
 		Mesh* mesh = model->Meshes().at(0);
 		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, &mVertexBuffer);
 		mesh->CreateIndexBuffer(&mIndexBuffer);
 		mIndexCount = mesh->Indices().size();
 
-		std::wstring textureName = model->Materials->Name;
+		std::wstring textureName = L"Content\\Textures\\EarthComposite.jpg";
 		if (FAILED(hr = DirectX::CreateWICTextureFromFile(mGame->Direct3DDevice(), mGame->Direct3DDeviceContext(), textureName.c_str(), nullptr, &mTextureShaderResourceView)))
 		{
-			throw GameException("CreateWICTextureFromFile() failed.", hr);
+			throw GameException("CreateWICTextureFromFile() failed.\nTHNAKS OBAMA", hr);
 		}
 	}
 
@@ -144,6 +146,7 @@ namespace Rendering
         XMMATRIX worldMatrix = XMLoadFloat4x4(&mWorldMatrix);
         XMMATRIX wvp = worldMatrix * mCamera->ViewMatrix() * mCamera->ProjectionMatrix();
         mWvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
+		mColorTextureVariable->SetResource(mTextureShaderResourceView);
 
         mPass->Apply(0, direct3DDeviceContext);
 
