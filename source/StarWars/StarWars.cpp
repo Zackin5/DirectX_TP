@@ -50,7 +50,8 @@ namespace Rendering
 
 		ID3D10Blob* compiledShader = nullptr;
 		ID3D10Blob* errorMessages = nullptr;
-		HRESULT hr = D3DCompileFromFile(L"Content\\Effects\\TextureMapping.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
+		//HRESULT hr = D3DCompileFromFile(L"Content\\Effects\\TextureMapping.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
+		hr = D3DCompileFromFile(L"Content\\Effects\\TextureMapping.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
 		if (FAILED(hr))
 		{
 			char* errorMessage = (errorMessages != nullptr ? (char*)errorMessages->GetBufferPointer() : "D3DX11CompileFromFile() failed");
@@ -122,18 +123,9 @@ namespace Rendering
         }
 	#pragma endregion
 
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
 
-		Mesh* mesh = model->Meshes().at(0);
-		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, &mVertexBuffer);
-		mesh->CreateIndexBuffer(&mIndexBuffer);
-		mIndexCount = mesh->Indices().size();
-
-		std::wstring textureName = L"Content\\Textures\\EarthComposite.jpg";
-		if (FAILED(hr = DirectX::CreateWICTextureFromFile(mGame->Direct3DDevice(), mGame->Direct3DDeviceContext(), textureName.c_str(), nullptr, &mTextureShaderResourceView)))
-		{
-			throw GameException("CreateWICTextureFromFile() failed.\nTHNAKS OBAMA", hr);
-		}
+		//CreateModel("Content\\Models\\SpaceShipTemp.obj", L"Content\\Textures\\Stars1HD.png", true);
+		CreateModel("Content\\Models\\Sphere.obj", L"Content\\Textures\\EarthComposite.jpg", true);
 	}
 
 
@@ -146,23 +138,23 @@ namespace Rendering
 
 	void StarWars::Draw(const GameTime& gameTime)
 	{
-		ID3D11DeviceContext* direct3DDeviceContext = mGame->Direct3DDeviceContext();        
-        direct3DDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        direct3DDeviceContext->IASetInputLayout(mInputLayout);
+		ID3D11DeviceContext* direct3DDeviceContext = mGame->Direct3DDeviceContext();
+		direct3DDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		direct3DDeviceContext->IASetInputLayout(mInputLayout);
 
-		UINT stride = sizeof(BasicEffectVertex);
-        UINT offset = 0;
-        direct3DDeviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);		
+		UINT stride = sizeof(TextureMappingVertex);
+		UINT offset = 0;
+		direct3DDeviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 		direct3DDeviceContext->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-		        
-        XMMATRIX worldMatrix = XMLoadFloat4x4(&mWorldMatrix);
-        XMMATRIX wvp = worldMatrix * mCamera->ViewMatrix() * mCamera->ProjectionMatrix();
-        mWvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
+
+		XMMATRIX worldMatrix = XMLoadFloat4x4(&mWorldMatrix);
+		XMMATRIX wvp = worldMatrix * mCamera->ViewMatrix() * mCamera->ProjectionMatrix();
+		mWvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 		mColorTextureVariable->SetResource(mTextureShaderResourceView);
 
-        mPass->Apply(0, direct3DDeviceContext);
+		mPass->Apply(0, direct3DDeviceContext);
 
-        direct3DDeviceContext->DrawIndexed(mIndexCount, 0, 0);
+		direct3DDeviceContext->DrawIndexed(mIndexCount, 0, 0);
 	}
 
 
@@ -196,5 +188,30 @@ namespace Rendering
 		{
 			throw GameException("ID3D11Device::CreateBuffer() failed.");
 		}
+	}
+
+	void StarWars::CreateModel(std::string modelFile, std::wstring textureFile, bool flipUVs)
+	{
+		if( FAILED(hr) )
+			GameException(("CreateModel() failed.\nhr is not instantiated, you're likely calling the function before it is" ), hr);
+
+		std::unique_ptr<Model> model(new Model(*mGame, modelFile, flipUVs));
+
+		Mesh* mesh = model->Meshes().at(0);
+		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, &mVertexBuffer);
+		mesh->CreateIndexBuffer(&mIndexBuffer);
+		mIndexCount = mesh->Indices().size();
+
+		std::wstring textureName = textureFile;
+		if (FAILED(hr = DirectX::CreateWICTextureFromFile(mGame->Direct3DDevice(), mGame->Direct3DDeviceContext(), textureName.c_str(), nullptr, &mTextureShaderResourceView)))
+		{
+			throw GameException("CreateWICTextureFromFile() failed.\nTHNAKS OBAMA", hr);
+		}
+
+	}
+
+	void StarWars::CreateModel(std::string modelFile, std::wstring textureFile)
+	{
+		StarWars::CreateModel(modelFile, textureFile, false);
 	}
 }

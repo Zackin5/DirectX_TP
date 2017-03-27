@@ -69,7 +69,11 @@ namespace Rendering
 		ID3D11Buffer* mIndexBuffer;
 		UINT mIndexCount;
 
+		HRESULT hr;
 		XMFLOAT4X4 mWorldMatrix;	
 		float mAngle;
+
+		void CreateModel(std::string modelFile, std::wstring textureFile, bool flipUVs);
+		void CreateModel(std::string modelFile, std::wstring textureFile);
 	};
 }
