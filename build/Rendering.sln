@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StarWars", "..\source\StarWars\StarWars.vcxproj", "{7707D64A-920A-47BC-AC81-B51B24754E63}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTP", "DirectXTP\DirectXTP.vcxproj", "{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Library", "..\source\Library\Library.vcxproj", "{8F60BA9C-AAB6-47E4-BD36-DCDEBF4D9AE6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK_Desktop_2015_Win10", "..\source\DirectXTK-master\DirectXTK_Desktop_2015_Win10.vcxproj", "{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,22 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7707D64A-920A-47BC-AC81-B51B24754E63}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7707D64A-920A-47BC-AC81-B51B24754E63}.Debug|Win32.Build.0 = Debug|Win32
-		{7707D64A-920A-47BC-AC81-B51B24754E63}.Debug|x64.ActiveCfg = Debug|Win32
-		{7707D64A-920A-47BC-AC81-B51B24754E63}.Release|Win32.ActiveCfg = Release|Win32
-		{7707D64A-920A-47BC-AC81-B51B24754E63}.Release|Win32.Build.0 = Release|Win32
-		{7707D64A-920A-47BC-AC81-B51B24754E63}.Release|x64.ActiveCfg = Release|Win32
-		{8F60BA9C-AAB6-47E4-BD36-DCDEBF4D9AE6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8F60BA9C-AAB6-47E4-BD36-DCDEBF4D9AE6}.Debug|Win32.Build.0 = Debug|Win32
-		{8F60BA9C-AAB6-47E4-BD36-DCDEBF4D9AE6}.Debug|x64.ActiveCfg = Debug|Win32
-		{8F60BA9C-AAB6-47E4-BD36-DCDEBF4D9AE6}.Release|Win32.ActiveCfg = Release|Win32
-		{8F60BA9C-AAB6-47E4-BD36-DCDEBF4D9AE6}.Release|Win32.Build.0 = Release|Win32
-		{8F60BA9C-AAB6-47E4-BD36-DCDEBF4D9AE6}.Release|x64.ActiveCfg = Release|Win32
+		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Debug|Win32.Build.0 = Debug|Win32
+		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Debug|x64.ActiveCfg = Debug|x64
+		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Debug|x64.Build.0 = Debug|x64
+		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Release|Win32.ActiveCfg = Release|Win32
+		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Release|Win32.Build.0 = Release|Win32
+		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Release|x64.ActiveCfg = Release|x64
+		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Release|x64.Build.0 = Release|x64
+		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Debug|Win32.Build.0 = Debug|Win32
+		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Debug|x64.ActiveCfg = Debug|x64
+		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Debug|x64.Build.0 = Debug|x64
+		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|Win32.ActiveCfg = Release|Win32
+		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|Win32.Build.0 = Release|Win32
+		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|x64.ActiveCfg = Release|x64
+		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
