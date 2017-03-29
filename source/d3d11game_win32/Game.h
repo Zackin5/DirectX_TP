@@ -1,4 +1,8 @@
 //
+// Base template for Windows drawing, DirectX resource setup, etc. is taken from https://github.com/walbourn/directx-vs-templates
+//
+
+//
 // Game.h
 //
 
@@ -62,4 +66,23 @@ private:
 
     // Rendering loop timer.
     DX::StepTimer                                   m_timer;
+
+	// Homemade stuff goes past here
+
+	// Resolution (minimum is 320x200)
+	int windowX = 800;
+	int windowY = 600;
+	float renderrScale = 1; // Resolution scale multiplier, allows for supersampling or undersampling (altough the lack of filtering really makes the former look lacking)
+
+	// MSAA Level, a value of 1 disables it
+	int MSAALevel = 8;
+
+	DirectX::SimpleMath::Matrix m_world;
+	DirectX::SimpleMath::Matrix m_view;
+	DirectX::SimpleMath::Matrix m_proj;
+
+	std::unique_ptr<DirectX::CommonStates> m_states;
+	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
+	std::unique_ptr<DirectX::GeometricPrimitive> m_shape;
+	std::unique_ptr<DirectX::Model> m_model;
 };

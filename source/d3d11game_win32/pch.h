@@ -1,4 +1,8 @@
 //
+// Base template for Windows drawing, DirectX resource setup, etc. is taken from https://github.com/walbourn/directx-vs-templates
+//
+
+//
 // pch.h
 // Header for standard system include files.
 //
@@ -11,7 +15,7 @@
 
 // DirectXTK Project Headers
 
-/*#include "CommonStates.h"
+#include "CommonStates.h"
 #include "DDSTextureLoader.h"
 #include "DirectXHelpers.h"
 #include "Effects.h"
@@ -27,7 +31,7 @@
 #include "SpriteBatch.h"
 #include "SpriteFont.h"
 #include "VertexTypes.h"
-#include "WICTextureLoader.h"*/
+#include "WICTextureLoader.h"
 
 // Use the C++ standard templated min/max
 #define NOMINMAX

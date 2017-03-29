@@ -1,4 +1,8 @@
 //
+// Base template for Windows drawing, DirectX resource setup, etc. is taken from https://github.com/walbourn/directx-vs-templates
+//
+
+//
 // Main.cpp
 //
 

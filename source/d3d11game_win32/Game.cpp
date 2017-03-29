@@ -1,4 +1,8 @@
 //
+// Base template for Windows drawing, DirectX resource setup, etc. is taken from https://github.com/walbourn/directx-vs-templates
+//
+
+//
 // Game.cpp
 //
 
@@ -8,14 +12,14 @@
 extern void ExitGame();
 
 using namespace DirectX;
-//using namespace DirectX::SimpleMath;
+using namespace DirectX::SimpleMath;
 
 using Microsoft::WRL::ComPtr;
 
 Game::Game() :
     m_window(0),
-    m_outputWidth(800),
-    m_outputHeight(600),
+    m_outputWidth(windowX),
+    m_outputHeight(windowY),
     m_featureLevel(D3D_FEATURE_LEVEL_9_1)
 {
 }
@@ -24,8 +28,8 @@ Game::Game() :
 void Game::Initialize(HWND window, int width, int height)
 {
     m_window = window;
-    m_outputWidth = std::max(width, 1);
-    m_outputHeight = std::max(height, 1);
+    m_outputWidth = max(width, 1) * renderrScale;
+    m_outputHeight = max(height, 1) * renderrScale;
 
     CreateDevice();
 
@@ -56,6 +60,8 @@ void Game::Update(DX::StepTimer const& timer)
     float elapsedTime = float(timer.GetElapsedSeconds());
 
     // TODO: Add your game logic here.
+	m_world = Matrix::CreateRotationZ(cosf(timer.GetTotalSeconds()) * 2.f); // Simple wobble example from the documentation
+
     elapsedTime;
 }
 
@@ -71,6 +77,8 @@ void Game::Render()
     Clear();
 
     // TODO: Add your rendering code here.
+	//m_shape->Draw(m_world, m_view, m_proj);
+	m_model->Draw(m_d3dContext.Get(), *m_states, m_world, m_view, m_proj);
 
     Present();
 }
@@ -133,8 +141,8 @@ void Game::OnResuming()
 
 void Game::OnWindowSizeChanged(int width, int height)
 {
-    m_outputWidth = std::max(width, 1);
-    m_outputHeight = std::max(height, 1);
+    m_outputWidth = max(width, 1) * renderrScale;
+    m_outputHeight = max(height, 1) * renderrScale;
 
     CreateResources();
 
@@ -145,13 +153,15 @@ void Game::OnWindowSizeChanged(int width, int height)
 void Game::GetDefaultSize(int& width, int& height) const
 {
     // TODO: Change to desired default window size (note minimum size is 320x200).
-    width = 800;
-    height = 600;
+    width = windowX;
+    height = windowY;
 }
 
 // These are the resources that depend on the device.
 void Game::CreateDevice()
 {
+	#pragma region DirectX setup and checks
+
     UINT creationFlags = 0;
 
 #ifdef _DEBUG
@@ -231,11 +241,24 @@ void Game::CreateDevice()
         (void)m_d3dContext.As(&m_d3dContext1);
 
     // TODO: Initialize device dependent objects here (independent of window size).
+	#pragma endregion
+
+	// Custom code past here
+	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
+
+	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
+
+	m_shape = GeometricPrimitive::CreateCube(m_d3dContext.Get());
+	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"cup.cmo", *m_fxFactory);
+
+	m_world = Matrix::Identity;
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
 void Game::CreateResources()
 {
+	#pragma region DirectX setup and checks
+
     // Clear the previous window size specific context.
     ID3D11RenderTargetView* nullViews [] = { nullptr };
     m_d3dContext->OMSetRenderTargets(_countof(nullViews), nullViews, nullptr);
@@ -292,7 +315,7 @@ void Game::CreateResources()
             swapChainDesc.Width = backBufferWidth;
             swapChainDesc.Height = backBufferHeight;
             swapChainDesc.Format = backBufferFormat;
-            swapChainDesc.SampleDesc.Count = 1;
+            swapChainDesc.SampleDesc.Count = MSAALevel;
             swapChainDesc.SampleDesc.Quality = 0;
             swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
             swapChainDesc.BufferCount = backBufferCount;
@@ -321,7 +344,7 @@ void Game::CreateResources()
             swapChainDesc.BufferDesc.Format = backBufferFormat;
             swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
             swapChainDesc.OutputWindow = m_window;
-            swapChainDesc.SampleDesc.Count = 1;
+            swapChainDesc.SampleDesc.Count = MSAALevel;
             swapChainDesc.SampleDesc.Quality = 0;
             swapChainDesc.Windowed = TRUE;
 
@@ -341,20 +364,29 @@ void Game::CreateResources()
 
     // Allocate a 2-D surface as the depth/stencil buffer and
     // create a DepthStencil view on this surface to use on bind.
-    CD3D11_TEXTURE2D_DESC depthStencilDesc(depthBufferFormat, backBufferWidth, backBufferHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL);
+    CD3D11_TEXTURE2D_DESC depthStencilDesc(depthBufferFormat, backBufferWidth, backBufferHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT, 0, MSAALevel, 0);
 
     ComPtr<ID3D11Texture2D> depthStencil;
     DX::ThrowIfFailed(m_d3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, depthStencil.GetAddressOf()));
 
-    CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
+	CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2DMS);
     DX::ThrowIfFailed(m_d3dDevice->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, m_depthStencilView.ReleaseAndGetAddressOf()));
 
     // TODO: Initialize windows-size dependent objects here.
+	#pragma endregion
+
+	// Custom code past here
+	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f), Vector3::Zero, Vector3::UnitY);
+	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 10.f);
 }
 
 void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
+	m_states.reset();
+	m_fxFactory.reset();
+	m_shape.reset();
+	//m_model.reset();
 
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();
