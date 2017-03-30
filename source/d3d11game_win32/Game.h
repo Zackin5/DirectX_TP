@@ -35,6 +35,14 @@ public:
     // Properties
     void GetDefaultSize( int& width, int& height ) const;
 
+	// Custom clamp function because I wasn't about to go to the effort of upgrading this project to C++17
+	inline float clamp(float value, float min_value, float max_value) {	return max(min_value, min(value, max_value));	};
+
+	// Custom degree to radians fuction becuase DirectX uses the former but I'm used to the latter
+	inline float degreeToRads(float degree) { return (degree * 3.14159) / 180.f; };
+
+	inline float lerp(float i, float a, float b) { return a + i * (b - a); };
+
 private:
 
     void Update(DX::StepTimer const& timer);
@@ -71,20 +79,27 @@ private:
 
 	// Resolution (minimum is 320x200)
 	int windowX = 1280;
-	int windowY = 900;
+	int windowY = 800;
 	float renderrScale = 1; // Resolution scale multiplier, allows for supersampling or undersampling (altough the lack of filtering really makes the former look lacking)
 
 	// MSAA Level, a value of 1 disables it
 	int MSAALevel = 8;
+	float debugTime;
+	int debugState;
 
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 	DirectX::SimpleMath::Matrix m_world;
 	DirectX::SimpleMath::Matrix m_view;
 	DirectX::SimpleMath::Matrix m_proj;
+	DirectX::SimpleMath::Vector2 m_fontPos;
+
+	DirectX::SimpleMath::Matrix m_view_title;
+	DirectX::SimpleMath::Matrix m_view_scene1;
 
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
-	std::unique_ptr<DirectX::GeometricPrimitive> m_shape;
+	std::unique_ptr<DirectX::SpriteFont> m_font;
+	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 	std::unique_ptr<DirectX::Model> m_model;
 
 	std::unique_ptr<DirectX::GeometricPrimitive> m_sky;

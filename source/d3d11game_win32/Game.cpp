@@ -59,11 +59,27 @@ void Game::Update(DX::StepTimer const& timer)
 {
     float elapsedTime = float(timer.GetElapsedSeconds());
 
-    // TODO: Add your game logic here.
+    // Custom game logic goes here
 	//m_world = Matrix::CreateRotationZ(cosf(timer.GetTotalSeconds()) * 2.f); // Simple wobble example from the documentation
 
-	m_view = Matrix::CreateLookAt(Vector3(cosf(timer.GetTotalSeconds()) * 2.f, 2.f, 2.f), Vector3::Zero, Vector3::UnitY);
-	m_dickard_world = Matrix::CreateRotationY(XM_PI) * Matrix::CreateTranslation(Vector3::Lerp(Vector3::Right * -12.f, Vector3::Zero, timer.GetTotalSeconds() / 2));
+	debugTime = timer.GetTotalSeconds();
+
+	float panStart = 6.f; // What time does the credit pan-down start
+	float panEnd = panStart + 10.f;
+
+	// Scene switch logic
+	if (timer.GetTotalSeconds() < panStart)
+	{
+		m_view = Matrix::CreateRotationX(degreeToRads(75.f)) * Matrix::CreateTranslation(Vector3::Down * 5.f);
+		debugState = 0;
+	}
+	else if (timer.GetTotalSeconds() < panEnd)
+	{
+		m_view = Matrix::CreateRotationX(degreeToRads( lerp( timer.GetTotalSeconds() / 4, 75.f, 0.f))) * Matrix::CreateTranslation(Vector3::Down * 5.f);
+		debugState = 1;
+	}
+
+	m_dickard_world = Matrix::CreateRotationY(XM_PI) * Matrix::CreateTranslation(Vector3::Lerp(Vector3::Right * -12.f, Vector3::Zero, clamp( (timer.GetTotalSeconds() / 8.f), 0, 0.95 )));
 
     elapsedTime;
 }
@@ -80,12 +96,23 @@ void Game::Render()
     Clear();
 
     // TODO: Add your rendering code here.
+
+	// Draw skybox
 	m_sky_fx->SetWorld(m_sky_world);
 	m_sky_fx->SetView(m_view);
 	m_sky_fx->SetProjection(m_sky_proj);
-	m_sky->Draw(m_sky_fx.get(), m_inputLayout.Get()); //(m_sky_world, m_view, m_proj);
+	m_sky->Draw(m_sky_fx.get(), m_inputLayout.Get());
+
+	// Draw models
 	m_model->Draw(m_d3dContext.Get(), *m_states, m_world, m_view, m_proj);
 	m_dickard->Draw(m_d3dContext.Get(), *m_states, m_dickard_world, m_view, m_proj);
+
+	// Draw debug text
+	m_spriteBatch->Begin();
+	std::wostringstream infoTxt;
+	infoTxt << std::setprecision(4) << L"Total seconds: " << debugTime << L"\nCurrent scene: " << debugState;
+	m_font->DrawString(m_spriteBatch.get(), infoTxt.str().c_str(), m_fontPos, Colors::White);
+	m_spriteBatch->End();
 
     Present();
 }
@@ -252,20 +279,22 @@ void Game::CreateDevice()
 
 	// Custom code past here
 	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
-
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
+
+	// Prep the text print objects
+	m_font = std::make_unique<SpriteFont>(m_d3dDevice.Get(), L"Arial_14_Regular.spritefont");
+	m_spriteBatch = std::make_unique<SpriteBatch>(m_d3dContext.Get());
 
 	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"ProjStarD.cmo", *m_fxFactory, true);
 	m_world = Matrix::Identity;
 
+	// Prep the skybox
 	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"Stars1HD.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
-	m_sky = GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), 16.f, 3U, false);
+	m_sky = GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), 100.f, 3U, false);
 	m_sky_world = Matrix::Identity;
 	m_sky_fx = std::make_unique<BasicEffect>(m_d3dDevice.Get());
 	m_sky_fx->SetTextureEnabled(true);
 	m_sky_fx->SetLightingEnabled(false);
-	m_sky_fx->SetPerPixelLighting(false);
-	m_sky_fx->SetLightEnabled(0, false);
 	m_sky_fx->DisableSpecular();
 	m_sky_fx->SetFogEnabled(false);
 	m_sky_fx->SetTexture(m_sky_texture.Get());
@@ -397,8 +426,13 @@ void Game::CreateResources()
 	#pragma endregion
 
 	// Custom code past here
-	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f), Vector3::Zero, Vector3::UnitY);
+	m_fontPos = Vector2(0.f, 20.f);
+	m_view = Matrix::CreateTranslation(Vector3::Zero);
 	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 50.f);
+
+	m_view_title = Matrix::CreateRotationX(degreeToRads(75.f)) * Matrix::CreateTranslation(Vector3::Down * 5.f);
+	m_view_scene1 = Matrix::CreateTranslation(Vector3::Down * 5.f);
+
 	m_sky_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), .1f, 100.f);
 }
 
@@ -407,7 +441,8 @@ void Game::OnDeviceLost()
     // TODO: Add Direct3D resource cleanup here.
 	m_states.reset();
 	m_fxFactory.reset();
-	m_shape.reset();
+	m_font.reset();
+	m_spriteBatch.reset();
 	m_model.reset();
 	m_dickard.reset();
 	m_sky.reset();

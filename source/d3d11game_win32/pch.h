@@ -14,17 +14,16 @@
 #include <SDKDDKVer.h>
 
 // DirectXTK Project Headers
-
 #include "CommonStates.h"
 #include "DDSTextureLoader.h"
 #include "DirectXHelpers.h"
 #include "Effects.h"
-#include "GamePad.h"
+//#include "GamePad.h"
 #include "GeometricPrimitive.h"
 #include "GraphicsMemory.h"
-#include "Keyboard.h"
+//#include "Keyboard.h"
 #include "Model.h"
-#include "Mouse.h"
+//#include "Mouse.h"
 #include "PrimitiveBatch.h"
 #include "ScreenGrab.h"
 #include "SimpleMath.h"
@@ -32,6 +31,12 @@
 #include "SpriteFont.h"
 #include "VertexTypes.h"
 #include "WICTextureLoader.h"
+
+// Other stuff used
+#include <algorithm>
+#include <sstream>
+#include <iomanip>
+#include <string>
 
 // Use the C++ standard templated min/max
 #define NOMINMAX
