@@ -60,7 +60,10 @@ void Game::Update(DX::StepTimer const& timer)
     float elapsedTime = float(timer.GetElapsedSeconds());
 
     // TODO: Add your game logic here.
-	m_world = Matrix::CreateRotationZ(cosf(timer.GetTotalSeconds()) * 2.f); // Simple wobble example from the documentation
+	//m_world = Matrix::CreateRotationZ(cosf(timer.GetTotalSeconds()) * 2.f); // Simple wobble example from the documentation
+
+	m_view = Matrix::CreateLookAt(Vector3(cosf(timer.GetTotalSeconds()) * 2.f, 2.f, 2.f), Vector3::Zero, Vector3::UnitY);
+	m_dickard_world = Matrix::CreateRotationY(XM_PI) * Matrix::CreateTranslation(Vector3::Lerp(Vector3::Right * -12.f, Vector3::Zero, timer.GetTotalSeconds() / 2));
 
     elapsedTime;
 }
@@ -77,8 +80,12 @@ void Game::Render()
     Clear();
 
     // TODO: Add your rendering code here.
-	//m_shape->Draw(m_world, m_view, m_proj);
+	m_sky_fx->SetWorld(m_sky_world);
+	m_sky_fx->SetView(m_view);
+	m_sky_fx->SetProjection(m_sky_proj);
+	m_sky->Draw(m_sky_fx.get(), m_inputLayout.Get()); //(m_sky_world, m_view, m_proj);
 	m_model->Draw(m_d3dContext.Get(), *m_states, m_world, m_view, m_proj);
+	m_dickard->Draw(m_d3dContext.Get(), *m_states, m_dickard_world, m_view, m_proj);
 
     Present();
 }
@@ -248,10 +255,24 @@ void Game::CreateDevice()
 
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
 
-	m_shape = GeometricPrimitive::CreateCube(m_d3dContext.Get());
-	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"cup.cmo", *m_fxFactory);
-
+	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"ProjStarD.cmo", *m_fxFactory, true);
 	m_world = Matrix::Identity;
+
+	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"Stars1HD.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
+	m_sky = GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), 16.f, 3U, false);
+	m_sky_world = Matrix::Identity;
+	m_sky_fx = std::make_unique<BasicEffect>(m_d3dDevice.Get());
+	m_sky_fx->SetTextureEnabled(true);
+	m_sky_fx->SetLightingEnabled(false);
+	m_sky_fx->SetPerPixelLighting(false);
+	m_sky_fx->SetLightEnabled(0, false);
+	m_sky_fx->DisableSpecular();
+	m_sky_fx->SetFogEnabled(false);
+	m_sky_fx->SetTexture(m_sky_texture.Get());
+	m_sky->CreateInputLayout(m_sky_fx.get(), m_inputLayout.ReleaseAndGetAddressOf());
+
+	m_dickard = Model::CreateFromCMO(m_d3dDevice.Get(), L"SpaceShipTemp.cmo", *m_fxFactory, true);
+	m_dickard_world = Matrix::Identity;
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -315,7 +336,7 @@ void Game::CreateResources()
             swapChainDesc.Width = backBufferWidth;
             swapChainDesc.Height = backBufferHeight;
             swapChainDesc.Format = backBufferFormat;
-            swapChainDesc.SampleDesc.Count = MSAALevel;
+            swapChainDesc.SampleDesc.Count = max(MSAALevel,1);
             swapChainDesc.SampleDesc.Quality = 0;
             swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
             swapChainDesc.BufferCount = backBufferCount;
@@ -344,7 +365,7 @@ void Game::CreateResources()
             swapChainDesc.BufferDesc.Format = backBufferFormat;
             swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
             swapChainDesc.OutputWindow = m_window;
-            swapChainDesc.SampleDesc.Count = MSAALevel;
+            swapChainDesc.SampleDesc.Count = max(MSAALevel, 1);;
             swapChainDesc.SampleDesc.Quality = 0;
             swapChainDesc.Windowed = TRUE;
 
@@ -364,7 +385,7 @@ void Game::CreateResources()
 
     // Allocate a 2-D surface as the depth/stencil buffer and
     // create a DepthStencil view on this surface to use on bind.
-    CD3D11_TEXTURE2D_DESC depthStencilDesc(depthBufferFormat, backBufferWidth, backBufferHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT, 0, MSAALevel, 0);
+    CD3D11_TEXTURE2D_DESC depthStencilDesc(depthBufferFormat, backBufferWidth, backBufferHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT, 0, max(MSAALevel, 1), 0);
 
     ComPtr<ID3D11Texture2D> depthStencil;
     DX::ThrowIfFailed(m_d3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, depthStencil.GetAddressOf()));
@@ -377,7 +398,8 @@ void Game::CreateResources()
 
 	// Custom code past here
 	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f), Vector3::Zero, Vector3::UnitY);
-	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 10.f);
+	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 50.f);
+	m_sky_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), .1f, 100.f);
 }
 
 void Game::OnDeviceLost()
@@ -386,7 +408,11 @@ void Game::OnDeviceLost()
 	m_states.reset();
 	m_fxFactory.reset();
 	m_shape.reset();
-	//m_model.reset();
+	m_model.reset();
+	m_dickard.reset();
+	m_sky.reset();
+	m_sky_fx.reset();
+	m_inputLayout.Reset();
 
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();

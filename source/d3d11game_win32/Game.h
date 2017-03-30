@@ -70,13 +70,14 @@ private:
 	// Homemade stuff goes past here
 
 	// Resolution (minimum is 320x200)
-	int windowX = 800;
-	int windowY = 600;
+	int windowX = 1280;
+	int windowY = 900;
 	float renderrScale = 1; // Resolution scale multiplier, allows for supersampling or undersampling (altough the lack of filtering really makes the former look lacking)
 
 	// MSAA Level, a value of 1 disables it
 	int MSAALevel = 8;
 
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 	DirectX::SimpleMath::Matrix m_world;
 	DirectX::SimpleMath::Matrix m_view;
 	DirectX::SimpleMath::Matrix m_proj;
@@ -85,4 +86,13 @@ private:
 	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
 	std::unique_ptr<DirectX::GeometricPrimitive> m_shape;
 	std::unique_ptr<DirectX::Model> m_model;
+
+	std::unique_ptr<DirectX::GeometricPrimitive> m_sky;
+	std::unique_ptr<DirectX::BasicEffect> m_sky_fx;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_sky_texture;
+	DirectX::SimpleMath::Matrix m_sky_world;
+	DirectX::SimpleMath::Matrix m_sky_proj;
+
+	std::unique_ptr<DirectX::Model> m_dickard;
+	DirectX::SimpleMath::Matrix m_dickard_world;
 };
