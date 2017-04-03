@@ -60,13 +60,14 @@ void Game::Update(DX::StepTimer const& timer)
     float elapsedTime = float(timer.GetElapsedSeconds());
 
     // Custom game logic goes here
-	//m_world = Matrix::CreateRotationZ(cosf(timer.GetTotalSeconds()) * 2.f); // Simple wobble example from the documentation
-
 	debugTime = timer.GetTotalSeconds();
 
-	float t_panStart = 3.f; // What time does the credit pan-down start
-	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float introPitch = -75.f; // Intro pitch angle (inverted)
+	float t_panStart = 3.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
+	float t_panEnd = t_panStart + 10.f; // What time does the pan end
+	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
+
+	float deltaT = 0;
 
 	// Scene switch logic
 	if (timer.GetTotalSeconds() < t_panStart)
@@ -76,13 +77,21 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 	else if (timer.GetTotalSeconds() < t_panEnd)
 	{
-		float deltaT = t_panStart - timer.GetTotalSeconds();
+		deltaT = t_panStart - timer.GetTotalSeconds(); // I think this is actually calculating everything inverted but everything is working properly with this value so I'm gonna ignore it
 		
 		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(clamp(introPitch - deltaT * 8.f, introPitch, 0)));
 		debugState = 1;
 	}
+	else if (timer.GetTotalSeconds() < t_scene2)
+	{
+		deltaT = timer.GetTotalSeconds() - t_panEnd;
+		debugState = 2;
 
-	m_world = Matrix::CreateRotationZ(degreeToRads(timer.GetTotalSeconds() * 8)) * Matrix::CreateTranslation(Vector3::Forward * 6.f);
+		m_runner_world = Matrix::CreateTranslation(Vector3(0.4f, 0.6f, 0.f)) * Matrix::CreateTranslation(Vector3::Forward * deltaT * 1.15);
+		m_stard_world = Matrix::CreateTranslation(Vector3(0.4f, 1.f, 8.f)) * Matrix::CreateTranslation(Vector3::Forward * deltaT * 1.15);
+	}
+
+	//m_world = Matrix::CreateRotationZ(degreeToRads(timer.GetTotalSeconds() * 8)) * Matrix::CreateTranslation(Vector3::Forward * 6.f);
 	//m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f), Vector3::Down * 0.f, Vector3::UnitY);
 	//m_dickard_world = Matrix::CreateRotationY(XM_PI) * Matrix::CreateTranslation(Vector3::Lerp(Vector3::Right * -12.f, Vector3::Zero, clamp( (timer.GetTotalSeconds() / 8.f), 0, 0.95 )));
 
@@ -109,15 +118,18 @@ void Game::Render()
 	m_sky->Draw(m_sky_fx.get(), m_inputLayout.Get());
 
 	// Draw models
-	m_model->Draw(m_d3dContext.Get(), *m_states, m_world, m_view, m_proj);
-	m_dickard->Draw(m_d3dContext.Get(), *m_states, m_dickard_world, m_view, m_proj);
+	m_stard->Draw(m_d3dContext.Get(), *m_states, m_stard_world, m_view, m_proj);
+	m_runner->Draw(m_d3dContext.Get(), *m_states, m_runner_world, m_view, m_proj);
 
 	// Draw debug text
-	m_spriteBatch->Begin();
-	std::wostringstream infoTxt;
-	infoTxt << std::setprecision(4) << L"Total seconds: " << debugTime << L"\nCurrent scene: " << debugState;
-	m_font->DrawString(m_spriteBatch.get(), infoTxt.str().c_str(), m_fontPos, Colors::White);
-	m_spriteBatch->End();
+	if (debug)
+	{
+		m_spriteBatch->Begin();
+		std::wostringstream infoTxt;
+		infoTxt << std::setprecision(4) << L"Total seconds: " << debugTime << L"\nCurrent scene: " << debugState;
+		m_font->DrawString(m_spriteBatch.get(), infoTxt.str().c_str(), m_fontPos, Colors::White);
+		m_spriteBatch->End();
+	}
 
     Present();
 }
@@ -290,11 +302,19 @@ void Game::CreateDevice()
 	m_font = std::make_unique<SpriteFont>(m_d3dDevice.Get(), L"Arial_14_Regular.spritefont");
 	m_spriteBatch = std::make_unique<SpriteBatch>(m_d3dContext.Get());
 
-	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"ProjStarD.cmo", *m_fxFactory, true);
-	m_world = Matrix::Identity;
+	// Prep models
+	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"ProjStarD.cmo", *m_fxFactory, true);
+	m_stard_world = Matrix::Identity;
+
+	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"SpaceShipTemp.cmo", *m_fxFactory, true);
+	m_runner_world = Matrix::Identity;
 
 	// Prep the skybox
-	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"horizonsphere.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
+	if(debug)
+		DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"horizonsphere.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
+	else
+		DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"Stars1HD.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
+
 	m_sky = GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), 100.f, 3U, false);
 	m_sky_world = Matrix::Identity;
 	m_sky_fx = std::make_unique<BasicEffect>(m_d3dDevice.Get());
@@ -304,9 +324,6 @@ void Game::CreateDevice()
 	m_sky_fx->SetFogEnabled(false);
 	m_sky_fx->SetTexture(m_sky_texture.Get());
 	m_sky->CreateInputLayout(m_sky_fx.get(), m_inputLayout.ReleaseAndGetAddressOf());
-
-	m_dickard = Model::CreateFromCMO(m_d3dDevice.Get(), L"ProjStarD.cmo", *m_fxFactory, true);
-	m_dickard_world = Matrix::Identity;
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -432,13 +449,17 @@ void Game::CreateResources()
 
 	// Custom code past here
 	m_fontPos = Vector2(0.f, 20.f);
+
+	// Setup the camera viewports and positions
 	m_view = Matrix::CreateTranslation(Vector3::Zero);
 	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 50.f);
 
-	m_view_title = Matrix::CreateRotationX(degreeToRads(75.f)) * Matrix::CreateTranslation(Vector3::Down * 5.f);
-	m_view_scene1 = Matrix::CreateTranslation(Vector3::Down * 5.f);
-
+	// Create the skybox projection
 	m_sky_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), .1f, 100.f);
+
+	// Move the models away from the camera
+	m_stard_world = Matrix::CreateTranslation(Vector3::Backward * 100.f);
+	m_runner_world = Matrix::CreateTranslation(Vector3::Backward * 100.f);
 }
 
 void Game::OnDeviceLost()
@@ -448,8 +469,8 @@ void Game::OnDeviceLost()
 	m_fxFactory.reset();
 	m_font.reset();
 	m_spriteBatch.reset();
-	m_model.reset();
-	m_dickard.reset();
+	m_stard.reset();
+	m_runner.reset();
 	m_sky.reset();
 	m_sky_fx.reset();
 	m_inputLayout.Reset();

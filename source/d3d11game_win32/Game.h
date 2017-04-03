@@ -75,7 +75,10 @@ private:
     // Rendering loop timer.
     DX::StepTimer                                   m_timer;
 
-	// Homemade stuff goes past here
+
+	///////////////////////////////////
+	// Homemade stuff goes past here //
+	///////////////////////////////////
 
 	// Resolution (minimum is 320x200)
 	int windowX = 1280;
@@ -85,10 +88,12 @@ private:
 	// MSAA Level, a value of 1 disables it
 	int MSAALevel = 8;
 	float debugTime;
+
+	// Debug stuff
+	bool debug = false;
 	int debugState;
 
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
-	DirectX::SimpleMath::Matrix m_world;
 	DirectX::SimpleMath::Matrix m_view;
 	DirectX::SimpleMath::Matrix m_proj;
 	DirectX::SimpleMath::Vector2 m_fontPos;
@@ -100,7 +105,7 @@ private:
 	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
 	std::unique_ptr<DirectX::SpriteFont> m_font;
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-	std::unique_ptr<DirectX::Model> m_model;
+
 
 	std::unique_ptr<DirectX::GeometricPrimitive> m_sky;
 	std::unique_ptr<DirectX::BasicEffect> m_sky_fx;
@@ -108,6 +113,9 @@ private:
 	DirectX::SimpleMath::Matrix m_sky_world;
 	DirectX::SimpleMath::Matrix m_sky_proj;
 
-	std::unique_ptr<DirectX::Model> m_dickard;
-	DirectX::SimpleMath::Matrix m_dickard_world;
+	std::unique_ptr<DirectX::Model> m_stard;
+	DirectX::SimpleMath::Matrix m_stard_world;
+
+	std::unique_ptr<DirectX::Model> m_runner;
+	DirectX::SimpleMath::Matrix m_runner_world;
 };
