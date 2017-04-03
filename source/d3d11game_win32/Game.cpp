@@ -64,22 +64,27 @@ void Game::Update(DX::StepTimer const& timer)
 
 	debugTime = timer.GetTotalSeconds();
 
-	float panStart = 6.f; // What time does the credit pan-down start
-	float panEnd = panStart + 10.f;
+	float t_panStart = 3.f; // What time does the credit pan-down start
+	float t_panEnd = t_panStart + 10.f; // What time does the pan end
+	float introPitch = -75.f; // Intro pitch angle (inverted)
 
 	// Scene switch logic
-	if (timer.GetTotalSeconds() < panStart)
+	if (timer.GetTotalSeconds() < t_panStart)
 	{
-		m_view = Matrix::CreateRotationX(degreeToRads(75.f)) * Matrix::CreateTranslation(Vector3::Down * 5.f);
+		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(introPitch));
 		debugState = 0;
 	}
-	else if (timer.GetTotalSeconds() < panEnd)
+	else if (timer.GetTotalSeconds() < t_panEnd)
 	{
-		m_view = Matrix::CreateRotationX(degreeToRads( lerp( timer.GetTotalSeconds() / 4, 75.f, 0.f))) * Matrix::CreateTranslation(Vector3::Down * 5.f);
+		float deltaT = t_panStart - timer.GetTotalSeconds();
+		
+		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(clamp(introPitch - deltaT * 8.f, introPitch, 0)));
 		debugState = 1;
 	}
 
-	m_dickard_world = Matrix::CreateRotationY(XM_PI) * Matrix::CreateTranslation(Vector3::Lerp(Vector3::Right * -12.f, Vector3::Zero, clamp( (timer.GetTotalSeconds() / 8.f), 0, 0.95 )));
+	m_world = Matrix::CreateRotationZ(degreeToRads(timer.GetTotalSeconds() * 8)) * Matrix::CreateTranslation(Vector3::Forward * 6.f);
+	//m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f), Vector3::Down * 0.f, Vector3::UnitY);
+	//m_dickard_world = Matrix::CreateRotationY(XM_PI) * Matrix::CreateTranslation(Vector3::Lerp(Vector3::Right * -12.f, Vector3::Zero, clamp( (timer.GetTotalSeconds() / 8.f), 0, 0.95 )));
 
     elapsedTime;
 }
@@ -289,7 +294,7 @@ void Game::CreateDevice()
 	m_world = Matrix::Identity;
 
 	// Prep the skybox
-	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"Stars1HD.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
+	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"horizonsphere.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
 	m_sky = GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), 100.f, 3U, false);
 	m_sky_world = Matrix::Identity;
 	m_sky_fx = std::make_unique<BasicEffect>(m_d3dDevice.Get());
@@ -300,7 +305,7 @@ void Game::CreateDevice()
 	m_sky_fx->SetTexture(m_sky_texture.Get());
 	m_sky->CreateInputLayout(m_sky_fx.get(), m_inputLayout.ReleaseAndGetAddressOf());
 
-	m_dickard = Model::CreateFromCMO(m_d3dDevice.Get(), L"SpaceShipTemp.cmo", *m_fxFactory, true);
+	m_dickard = Model::CreateFromCMO(m_d3dDevice.Get(), L"ProjStarD.cmo", *m_fxFactory, true);
 	m_dickard_world = Matrix::Identity;
 }
 
