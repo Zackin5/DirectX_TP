@@ -87,6 +87,12 @@ void Game::Update(DX::StepTimer const& timer)
 		deltaT = timer.GetTotalSeconds() - t_panEnd;
 		debugState = 2;
 
+		if (o_blasters.size() < 5 && deltaT > 5.f)
+			o_blasters.push_back(std::make_unique<Blaster>(m_d3dDevice, m_fxFactory.get, m_runner_world, m_stard_world));
+
+		for (int i = 0; i < o_blasters.size(); i++)
+			o_blasters[i]->Update();
+
 		m_runner_world = Matrix::CreateTranslation(Vector3(0.4f, 0.6f, 0.f)) * Matrix::CreateTranslation(Vector3::Forward * deltaT * 1.15);
 		m_stard_world = Matrix::CreateTranslation(Vector3(0.4f, 1.f, 8.f)) * Matrix::CreateTranslation(Vector3::Forward * deltaT * 1.15);
 	}
@@ -120,6 +126,9 @@ void Game::Render()
 	// Draw models
 	m_stard->Draw(m_d3dContext.Get(), *m_states, m_stard_world, m_view, m_proj);
 	m_runner->Draw(m_d3dContext.Get(), *m_states, m_runner_world, m_view, m_proj);
+	
+	for (int i = 0; i < o_blasters.size(); i++)
+		o_blasters[i]->model->Draw(m_d3dContext.Get(), *m_states, o_blasters[i]->m_world, m_view, m_proj);
 
 	// Draw debug text
 	if (debug)
@@ -211,90 +220,90 @@ void Game::GetDefaultSize(int& width, int& height) const
 // These are the resources that depend on the device.
 void Game::CreateDevice()
 {
-	#pragma region DirectX setup and checks
+#pragma region DirectX setup and checks
 
-    UINT creationFlags = 0;
+	UINT creationFlags = 0;
 
 #ifdef _DEBUG
-    creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-    static const D3D_FEATURE_LEVEL featureLevels [] =
-    {
-        // TODO: Modify for supported Direct3D feature levels (see code below related to 11.1 fallback handling).
-        D3D_FEATURE_LEVEL_11_1,
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-        D3D_FEATURE_LEVEL_9_3,
-        D3D_FEATURE_LEVEL_9_2,
-        D3D_FEATURE_LEVEL_9_1,
-    };
+	static const D3D_FEATURE_LEVEL featureLevels[] =
+	{
+		// TODO: Modify for supported Direct3D feature levels (see code below related to 11.1 fallback handling).
+		D3D_FEATURE_LEVEL_11_1,
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0,
+		D3D_FEATURE_LEVEL_9_3,
+		D3D_FEATURE_LEVEL_9_2,
+		D3D_FEATURE_LEVEL_9_1,
+	};
 
-    // Create the DX11 API device object, and get a corresponding context.
-    HRESULT hr = D3D11CreateDevice(
-        nullptr,                                // specify nullptr to use the default adapter
-        D3D_DRIVER_TYPE_HARDWARE,
-        nullptr,
-        creationFlags,
-        featureLevels,
-        _countof(featureLevels),
-        D3D11_SDK_VERSION,
-        m_d3dDevice.ReleaseAndGetAddressOf(),   // returns the Direct3D device created
-        &m_featureLevel,                        // returns feature level of device created
-        m_d3dContext.ReleaseAndGetAddressOf()   // returns the device immediate context
-        );
+	// Create the DX11 API device object, and get a corresponding context.
+	HRESULT hr = D3D11CreateDevice(
+		nullptr,                                // specify nullptr to use the default adapter
+		D3D_DRIVER_TYPE_HARDWARE,
+		nullptr,
+		creationFlags,
+		featureLevels,
+		_countof(featureLevels),
+		D3D11_SDK_VERSION,
+		m_d3dDevice.ReleaseAndGetAddressOf(),   // returns the Direct3D device created
+		&m_featureLevel,                        // returns feature level of device created
+		m_d3dContext.ReleaseAndGetAddressOf()   // returns the device immediate context
+		);
 
-    if (hr == E_INVALIDARG)
-    {
-        // DirectX 11.0 platforms will not recognize D3D_FEATURE_LEVEL_11_1 so we need to retry without it.
-        hr = D3D11CreateDevice(nullptr,
-            D3D_DRIVER_TYPE_HARDWARE,
-            nullptr,
-            creationFlags,
-            &featureLevels[1],
-            _countof(featureLevels) - 1,
-            D3D11_SDK_VERSION,
-            m_d3dDevice.ReleaseAndGetAddressOf(),
-            &m_featureLevel,
-            m_d3dContext.ReleaseAndGetAddressOf()
-            );
-    }
+	if (hr == E_INVALIDARG)
+	{
+		// DirectX 11.0 platforms will not recognize D3D_FEATURE_LEVEL_11_1 so we need to retry without it.
+		hr = D3D11CreateDevice(nullptr,
+			D3D_DRIVER_TYPE_HARDWARE,
+			nullptr,
+			creationFlags,
+			&featureLevels[1],
+			_countof(featureLevels) - 1,
+			D3D11_SDK_VERSION,
+			m_d3dDevice.ReleaseAndGetAddressOf(),
+			&m_featureLevel,
+			m_d3dContext.ReleaseAndGetAddressOf()
+			);
+	}
 
-    DX::ThrowIfFailed(hr);
+	DX::ThrowIfFailed(hr);
 
 #ifndef NDEBUG
-    ComPtr<ID3D11Debug> d3dDebug;
-    if (SUCCEEDED(m_d3dDevice.As(&d3dDebug)))
-    {
-        ComPtr<ID3D11InfoQueue> d3dInfoQueue;
-        if (SUCCEEDED(d3dDebug.As(&d3dInfoQueue)))
-        {
+	ComPtr<ID3D11Debug> d3dDebug;
+	if (SUCCEEDED(m_d3dDevice.As(&d3dDebug)))
+	{
+		ComPtr<ID3D11InfoQueue> d3dInfoQueue;
+		if (SUCCEEDED(d3dDebug.As(&d3dInfoQueue)))
+		{
 #ifdef _DEBUG
-            d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
-            d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
 #endif
-            D3D11_MESSAGE_ID hide [] =
-            {
-                D3D11_MESSAGE_ID_SETPRIVATEDATA_CHANGINGPARAMS,
-                // TODO: Add more message IDs here as needed.
-            };
-            D3D11_INFO_QUEUE_FILTER filter = {};
-            filter.DenyList.NumIDs = _countof(hide);
-            filter.DenyList.pIDList = hide;
-            d3dInfoQueue->AddStorageFilterEntries(&filter);
-        }
-    }
+			D3D11_MESSAGE_ID hide[] =
+			{
+				D3D11_MESSAGE_ID_SETPRIVATEDATA_CHANGINGPARAMS,
+				// TODO: Add more message IDs here as needed.
+			};
+			D3D11_INFO_QUEUE_FILTER filter = {};
+			filter.DenyList.NumIDs = _countof(hide);
+			filter.DenyList.pIDList = hide;
+			d3dInfoQueue->AddStorageFilterEntries(&filter);
+		}
+	}
 #endif
 
-    // DirectX 11.1 if present
-    if (SUCCEEDED(m_d3dDevice.As(&m_d3dDevice1)))
-        (void)m_d3dContext.As(&m_d3dContext1);
+	// DirectX 11.1 if present
+	if (SUCCEEDED(m_d3dDevice.As(&m_d3dDevice1)))
+		(void)m_d3dContext.As(&m_d3dContext1);
 
-    // TODO: Initialize device dependent objects here (independent of window size).
-	#pragma endregion
+	// TODO: Initialize device dependent objects here (independent of window size).
+#pragma endregion
 
-	// Custom code past here
+// Custom code past here
 	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
 

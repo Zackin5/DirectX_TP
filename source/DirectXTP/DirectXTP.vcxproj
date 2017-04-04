@@ -160,11 +160,14 @@
     <ClCompile Include="..\..\source\d3d11game_win32\Game.cpp" />
     <ClCompile Include="..\..\source\d3d11game_win32\Main.cpp" />
     <ClCompile Include="..\..\source\d3d11game_win32\pch.cpp" />
+    <ClCompile Include="Blaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\d3d11game_win32\Game.h" />
     <ClInclude Include="..\..\source\d3d11game_win32\pch.h" />
     <ClInclude Include="..\..\source\d3d11game_win32\StepTimer.h" />
+    <ClInclude Include="Blaster.h" />
+    <ClInclude Include="Maths.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\source\d3d11game_win32\resource.rc" />
