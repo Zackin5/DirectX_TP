@@ -81,7 +81,7 @@ private:
 	int MSAALevel = 8; // MSAA Level, a value of 1 disables it
 
 	// Debug stuff
-	bool debug = false;
+	bool debug = true;
 	int debugState;
 	float debugTime;
 

@@ -69,6 +69,10 @@ void Game::Update(DX::StepTimer const& timer)
 
 	float deltaT = 0;
 
+	// Update blaster bolts if any
+	for (int i = 0; i < o_blasters.size(); i++)
+		o_blasters.at(i)->Update();
+
 	// Scene switch logic
 	if (timer.GetTotalSeconds() < t_panStart)
 	{
@@ -87,12 +91,14 @@ void Game::Update(DX::StepTimer const& timer)
 		deltaT = timer.GetTotalSeconds() - t_panEnd;
 		debugState = 2;
 
+		// Spawn blasters at 5 seconds in
 		if (o_blasters.size() < 5 && deltaT > 5.f)
-			o_blasters.push_back(std::make_unique<Blaster>(m_d3dDevice, m_fxFactory.get, m_runner_world, m_stard_world));
+		{
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), m_runner_world, m_stard_world));
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), m_stard_world, m_runner_world));
+		}
 
-		for (int i = 0; i < o_blasters.size(); i++)
-			o_blasters[i]->Update();
-
+		// Update ship world positions
 		m_runner_world = Matrix::CreateTranslation(Vector3(0.4f, 0.6f, 0.f)) * Matrix::CreateTranslation(Vector3::Forward * deltaT * 1.15);
 		m_stard_world = Matrix::CreateTranslation(Vector3(0.4f, 1.f, 8.f)) * Matrix::CreateTranslation(Vector3::Forward * deltaT * 1.15);
 	}
@@ -483,6 +489,9 @@ void Game::OnDeviceLost()
 	m_sky.reset();
 	m_sky_fx.reset();
 	m_inputLayout.Reset();
+
+	for (int i = 0; i < o_blasters.size(); i++)
+		o_blasters[i]->model.reset();
 
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();

@@ -6,7 +6,7 @@ class Blaster
 {
 public:
 	Blaster();
-	Blaster(Microsoft::WRL::ComPtr<ID3D11Device> d3dDevice, std::unique_ptr<DirectX::IEffectFactory> fxFactory, DirectX::SimpleMath::Matrix origin, DirectX::SimpleMath::Matrix target);
+	Blaster(std::unique_ptr<DirectX::Model> blaster_model, DirectX::SimpleMath::Matrix origin_matrix, DirectX::SimpleMath::Matrix target_matrix);
 	
 	void Update();
 	std::unique_ptr<DirectX::Model> model;
