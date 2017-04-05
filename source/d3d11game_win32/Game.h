@@ -81,11 +81,15 @@ private:
 	int MSAALevel = 8; // MSAA Level, a value of 1 disables it
 
 	// Debug stuff
-	bool debug = true;
+	bool debug = false;
 	int debugState;
 	float debugTime;
 
-	// Logic stuff
+	// Runtime logic vars
+	bool stardFrameShot = false;
+	bool runnerFrameShot = false;
+
+	// Render pipeline stuff
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 	DirectX::SimpleMath::Matrix m_view;
 	DirectX::SimpleMath::Matrix m_proj;

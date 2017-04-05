@@ -63,15 +63,33 @@ void Game::Update(DX::StepTimer const& timer)
 	debugTime = timer.GetTotalSeconds();
 
 	float introPitch = -75.f; // Intro pitch angle (inverted)
-	float t_panStart = 3.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
+	float t_panStart = -10.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
+	float t_scene3 = t_scene2 + 20.f; // Scene for the closeup hits on the blackade runner
 
-	float deltaT = 0;
+	bool shipChasing = false; // Flag to perform the pursuit logic
+
+	// Ships' chance of shooting
+	int stardShootChanceMod = 16;
+	int runnerShootChanceMod = 16;
+
+	// Ships' rate of fire
+	float stardROF = 8.f;
+	float runnerROF = 4.f;
+
+	// Ships' blaster spread
+	float stardSpread = 50.f;
+	float runnerSpread = 25.f;
 
 	// Update blaster bolts if any
 	for (int i = 0; i < o_blasters.size(); i++)
-		o_blasters.at(i)->Update();
+	{
+		if (o_blasters[i]->dead != true)
+			o_blasters.at(i)->Update();
+		else
+			o_blasters.erase(o_blasters.begin() + i);
+	}
 
 	// Scene switch logic
 	if (timer.GetTotalSeconds() < t_panStart)
@@ -81,31 +99,54 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 	else if (timer.GetTotalSeconds() < t_panEnd)
 	{
-		deltaT = t_panStart - timer.GetTotalSeconds(); // I think this is actually calculating everything inverted but everything is working properly with this value so I'm gonna ignore it
+		float deltaT = t_panStart - timer.GetTotalSeconds(); // I think this is actually calculating everything inverted but everything is working properly with this value so I'm gonna ignore it
 		
 		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(clamp(introPitch - deltaT * 8.f, introPitch, 0)));
 		debugState = 1;
 	}
 	else if (timer.GetTotalSeconds() < t_scene2)
 	{
-		deltaT = timer.GetTotalSeconds() - t_panEnd;
+		shipChasing = true;
 		debugState = 2;
-
-		// Spawn blasters at 5 seconds in
-		if (o_blasters.size() < 5 && deltaT > 5.f)
-		{
-			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), m_runner_world, m_stard_world));
-			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), m_stard_world, m_runner_world));
-		}
-
-		// Update ship world positions
-		m_runner_world = Matrix::CreateTranslation(Vector3(0.4f, 0.6f, 0.f)) * Matrix::CreateTranslation(Vector3::Forward * deltaT * 1.15);
-		m_stard_world = Matrix::CreateTranslation(Vector3(0.4f, 1.f, 8.f)) * Matrix::CreateTranslation(Vector3::Forward * deltaT * 1.15);
+	}
+	else if (timer.GetTotalSeconds() < t_scene3)
+	{
+		shipChasing = true;
+		m_view = Matrix::CreateTranslation(Vector3(-0.05f, -0.5f, 35.f)) * Matrix::CreateRotationY(degreeToRads(170.f));
+		debugState = 3;
 	}
 
-	//m_world = Matrix::CreateRotationZ(degreeToRads(timer.GetTotalSeconds() * 8)) * Matrix::CreateTranslation(Vector3::Forward * 6.f);
-	//m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f), Vector3::Down * 0.f, Vector3::UnitY);
-	//m_dickard_world = Matrix::CreateRotationY(XM_PI) * Matrix::CreateTranslation(Vector3::Lerp(Vector3::Right * -12.f, Vector3::Zero, clamp( (timer.GetTotalSeconds() / 8.f), 0, 0.95 )));
+	// Pursuit logic
+	if (shipChasing)
+	{
+		// Roll the shoot chances
+		int shootChanceRollR = rand() % stardShootChanceMod;
+		int shootChanceRollSD = rand() % runnerShootChanceMod;
+
+		// Star Destroyer shoot logic
+		if ((int)(timer.GetTotalSeconds() * stardROF) % 2 == 0 && !stardFrameShot && shootChanceRollSD == 0)
+		{
+			// flag that we shot and go pewpew
+			stardFrameShot = true;
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), m_stard_world, m_runner_world, stardSpread));
+		}
+		else if ((int)(timer.GetTotalSeconds() * stardROF) % 2 == 1)
+			stardFrameShot = false;
+
+		// BLockade Runner shoot logic
+		if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 0 && !runnerFrameShot && shootChanceRollR == 0)
+		{
+			// flag that we shot and go pewpew
+			runnerFrameShot = true;
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"BlasterRed.cmo", *m_fxFactory, true), m_runner_world, m_stard_world, runnerSpread));
+		}
+		else if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 1)
+			runnerFrameShot = false;
+
+		// Update ship world positions
+		m_runner_world = Matrix::CreateTranslation(Vector3(0.4f, 0.5f, 0.f)) * Matrix::CreateTranslation(Vector3::Forward * (timer.GetTotalSeconds() - t_panEnd) * 1.15);
+		m_stard_world = Matrix::CreateTranslation(Vector3(0.4f, 1.1f, 8.f)) * Matrix::CreateTranslation(Vector3::Forward * (timer.GetTotalSeconds() - t_panEnd) * 1.15);
+	}
 
     elapsedTime;
 }
