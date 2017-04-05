@@ -132,6 +132,7 @@ void Game::Update(DX::StepTimer const& timer)
 			// flag that we shot and go pewpew
 			stardFrameShot = true;
 			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_stard_world, m_runner_world, stardSpread));
+			o_blasters.back()->lifetime = 2.f;
 		}
 		else if ((int)(timer.GetTotalSeconds() * stardROF) % 2 == 1)
 			stardFrameShot = false;
@@ -139,9 +140,12 @@ void Game::Update(DX::StepTimer const& timer)
 		// BLockade Runner shoot logic
 		if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 0 && !runnerFrameShot && shootChanceRollR == 0)
 		{
+			int turrentn = rand() % m_runner_turrents.size();
+			Vector3 v_turrent = m_runner_turrents[turrentn];
+
 			// flag that we shot and go pewpew
 			runnerFrameShot = true;
-			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"BlasterRed.cmo", *m_fxFactory, true), m_runner_world, m_stard_world, runnerSpread));
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"BlasterRed.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_runner_world, m_stard_world, runnerSpread));
 		}
 		else if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 1)
 			runnerFrameShot = false;
@@ -522,12 +526,17 @@ void Game::CreateResources()
 
 	// Push our turrent origin vectors values to the array
 	// Blender axis: X, Z, Y
+
+	// Stardestroyer
 	m_stard_turrents.push_back(Vector3(0.68f, 0.f, -2.8f));
 	m_stard_turrents.push_back(Vector3(-0.68f, 0.f, -2.8f));
 	m_stard_turrents.push_back(Vector3(1.5f, 0.f, -1.2f));
 	m_stard_turrents.push_back(Vector3(-1.5f, 0.f, -1.2f));
 	m_stard_turrents.push_back(Vector3(0.3f, -0.3f, -1.0f));
 	m_stard_turrents.push_back(Vector3(-0.3f, -0.3f, -1.0f));
+
+	// Blockade runner
+	m_runner_turrents.push_back(Vector3(0.f , 0.1f, 0.4f));
 }
 
 void Game::OnDeviceLost()

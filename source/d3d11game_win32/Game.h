@@ -116,9 +116,7 @@ private:
 
 	std::unique_ptr<DirectX::Model> m_runner;
 	DirectX::SimpleMath::Matrix m_runner_world;
+	std::vector<DirectX::SimpleMath::Vector3> m_runner_turrents;
 
 	std::vector<std::unique_ptr<Blaster>> o_blasters;
-
-	//std::vector<std::unique_ptr<DirectX::Model>> m_blasters;
-	//DirectX::SimpleMath::Matrix m_blaster_world;
 };
