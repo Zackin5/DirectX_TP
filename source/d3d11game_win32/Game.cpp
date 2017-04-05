@@ -126,12 +126,9 @@ void Game::Update(DX::StepTimer const& timer)
 		// Star Destroyer shoot logic
 		if ((int)(timer.GetTotalSeconds() * stardROF) % 2 == 0 && !stardFrameShot && shootChanceRollSD == 0)
 		{
-			int turrentn = rand() % m_stard_turrents.size();
-			Vector3 v_turrent = m_stard_turrents[turrentn];
-
 			// flag that we shot and go pewpew
 			stardFrameShot = true;
-			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_stard_world, m_runner_world, stardSpread));
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), m_stard_world, m_runner_world, stardSpread));
 		}
 		else if ((int)(timer.GetTotalSeconds() * stardROF) % 2 == 1)
 			stardFrameShot = false;
@@ -519,15 +516,6 @@ void Game::CreateResources()
 	// Move the models away from the camera
 	m_stard_world = Matrix::CreateTranslation(Vector3::Backward * 100.f);
 	m_runner_world = Matrix::CreateTranslation(Vector3::Backward * 100.f);
-
-	// Push our turrent origin vectors values to the array
-	// Blender axis: X, Z, Y
-	m_stard_turrents.push_back(Vector3(0.68f, 0.f, -2.8f));
-	m_stard_turrents.push_back(Vector3(-0.68f, 0.f, -2.8f));
-	m_stard_turrents.push_back(Vector3(1.5f, 0.f, -1.2f));
-	m_stard_turrents.push_back(Vector3(-1.5f, 0.f, -1.2f));
-	m_stard_turrents.push_back(Vector3(0.3f, -0.3f, -1.0f));
-	m_stard_turrents.push_back(Vector3(-0.3f, -0.3f, -1.0f));
 }
 
 void Game::OnDeviceLost()

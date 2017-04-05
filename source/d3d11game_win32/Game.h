@@ -112,7 +112,6 @@ private:
 
 	std::unique_ptr<DirectX::Model> m_stard;
 	DirectX::SimpleMath::Matrix m_stard_world;
-	std::vector<DirectX::SimpleMath::Vector3> m_stard_turrents;
 
 	std::unique_ptr<DirectX::Model> m_runner;
 	DirectX::SimpleMath::Matrix m_runner_world;
