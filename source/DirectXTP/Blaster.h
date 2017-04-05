@@ -12,7 +12,7 @@ public:
 	std::unique_ptr<DirectX::Model> model;
 
 	float speed = 5.f;
-	float lifetime = 4.f;
+	float lifetime = 1.f;
 	DirectX::SimpleMath::Matrix m_world;
 
 	bool dead = false;

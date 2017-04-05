@@ -27,7 +27,6 @@ Blaster::Blaster(std::unique_ptr<DirectX::Model> blastermodel, DirectX::SimpleMa
 	// Calculate rotation and the travel distance
 	vdistance = Vector3::Distance(v_origin, v_target);
 	m_world = Matrix::CreateLookAt(Vector3::Zero, v_origin - v_target, Vector3::UnitY) * Matrix::CreateTranslation(v_origin);
-	//m_world = Matrix::CreateTranslation(v_origin) * Matrix::CreateLookAt(v_origin, v_target, Vector3::Up);
 }
 
 void Blaster::Update()
