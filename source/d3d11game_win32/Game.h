@@ -10,6 +10,7 @@
 
 #include "StepTimer.h"
 #include "..\DirectXTP\Blaster.h"
+#include "..\DirectXTP\BlasterFlash.h"
 #include "..\DirectXTP\Maths.h"
 
 // A basic game implementation that creates a D3D11 device and
@@ -77,7 +78,7 @@ private:
 	// Resolution (minimum is 320x200)
 	int windowX = 1280;
 	int windowY = 800;
-	float renderrScale = 1; // Resolution scale multiplier, allows for supersampling or undersampling (altough the lack of filtering really makes the former look lacking)
+	float renderrScale = 1.f; // Resolution scale multiplier, allows for supersampling or undersampling (altough the lack of filtering really makes the former look lacking)
 	int MSAALevel = 8; // MSAA Level, a value of 1 disables it
 
 	// Debug stuff
@@ -115,7 +116,9 @@ private:
 	DirectX::SimpleMath::Matrix m_runner_world;
 	std::vector<DirectX::SimpleMath::Vector3> m_runner_turrents;
 
+	// Object references for blasters and the impact flashes
 	std::vector<std::unique_ptr<Blaster>> o_blasters;
+	std::vector<std::unique_ptr<BlasterFlash>> o_blasterFlashes;
 
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_flash_texture;
+	std::unique_ptr<DirectX::BasicEffect> m_blasterFlash_fx;
 };

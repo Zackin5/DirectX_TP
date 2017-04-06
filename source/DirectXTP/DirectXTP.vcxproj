@@ -152,25 +152,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Image Include="..\..\source\d3d11game_win32\directx.ico" />
     <Image Include="..\..\source\d3d11game_win32\preview.png" />
     <Image Include="..\..\source\d3d11game_win32\__TemplateIcon.ico" />
+    <Image Include="..\d3d11game_win32\icon1.ico" />
+    <Image Include="..\d3d11game_win32\icon2.ico" />
+    <Image Include="directx.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\d3d11game_win32\Game.cpp" />
     <ClCompile Include="..\..\source\d3d11game_win32\Main.cpp" />
     <ClCompile Include="..\..\source\d3d11game_win32\pch.cpp" />
     <ClCompile Include="Blaster.cpp" />
+    <ClCompile Include="BlasterFlash.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\d3d11game_win32\Game.h" />
     <ClInclude Include="..\..\source\d3d11game_win32\pch.h" />
     <ClInclude Include="..\..\source\d3d11game_win32\StepTimer.h" />
+    <ClInclude Include="..\d3d11game_win32\resource.h" />
     <ClInclude Include="Blaster.h" />
+    <ClInclude Include="BlasterFlash.h" />
     <ClInclude Include="Maths.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\..\source\d3d11game_win32\resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="..\..\source\d3d11game_win32\settings.manifest" />

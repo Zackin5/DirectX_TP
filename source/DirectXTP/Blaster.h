@@ -9,6 +9,7 @@ public:
 	Blaster(std::unique_ptr<DirectX::Model> blaster_model, DirectX::SimpleMath::Matrix origin_matrix, DirectX::SimpleMath::Matrix target_matrix, float spread_amount);
 	
 	void Update();
+
 	std::unique_ptr<DirectX::Model> model;
 
 	float speed = 5.f;
@@ -18,9 +19,9 @@ public:
 	bool dead = false;
 
 private:
-
 	DirectX::SimpleMath::Vector3 v_origin;
 	DirectX::SimpleMath::Vector3 v_target;
+	DirectX::SimpleMath::Matrix m_rotation;
 
 	float vdistance;
 	float lerpProgress = 0;

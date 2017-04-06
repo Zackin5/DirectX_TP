@@ -18,10 +18,16 @@
     <Image Include="..\..\source\d3d11game_win32\__TemplateIcon.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\..\source\d3d11game_win32\directx.ico">
+    <Image Include="..\..\source\d3d11game_win32\preview.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\..\source\d3d11game_win32\preview.png">
+    <Image Include="..\d3d11game_win32\icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\d3d11game_win32\icon2.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="directx.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
@@ -36,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Blaster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BlasterFlash.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -55,11 +64,12 @@
     <ClInclude Include="Maths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\..\source\d3d11game_win32\resource.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    <ClInclude Include="..\d3d11game_win32\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlasterFlash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="..\..\source\d3d11game_win32\settings.manifest" />

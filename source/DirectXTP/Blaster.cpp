@@ -27,18 +27,18 @@ Blaster::Blaster(std::unique_ptr<DirectX::Model> blastermodel, DirectX::SimpleMa
 	// Calculate rotation and the travel distance
 	vdistance = Vector3::Distance(v_origin, v_target);
 	m_world = Matrix::Identity;
-	//m_world = Matrix::CreateLookAt(Vector3::Zero, v_origin - v_target, Vector3::UnitY) * Matrix::CreateTranslation(v_origin);
+
+	// Calcuate flight angle
+	Vector3 v_normal = v_target - v_origin;
+	v_normal.Normalize();
+
+	m_rotation = Matrix::CreateLookAt(Vector3::Zero, v_normal, Vector3::Down);
+	m_rotation.Transpose();
 }
 
 void Blaster::Update()
 {
 	lerpProgress += vdistance * speed * 0.001f;
-
-	Vector3 v_normal = v_target - v_origin;
-	v_normal.Normalize();
-
-	Matrix m_rotation = Matrix::CreateLookAt(Vector3::Zero, v_normal, Vector3::Down);
-	m_rotation.Transpose();
 
 	if (lerpProgress < lifetime)
 		m_world = m_rotation * Matrix::CreateTranslation(Vector3::Lerp(v_origin, v_target, lerpProgress));

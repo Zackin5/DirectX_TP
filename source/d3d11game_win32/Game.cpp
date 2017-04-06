@@ -74,6 +74,13 @@ void Game::Update(DX::StepTimer const& timer)
 	int stardShootChanceMod = 16;
 	int runnerShootChanceMod = 16;
 
+	// Blasters' chance of exploding
+	int blasterFlashChance = 3;
+
+	// Blaster explosion max size
+	float blasterFlashSizeMax = 1.2f;
+	float blasterFlashSizeMin = 0.2f;
+
 	// Ships' rate of fire
 	float stardROF = 8.f;
 	float runnerROF = 4.f;
@@ -86,13 +93,33 @@ void Game::Update(DX::StepTimer const& timer)
 	float stardSpeed = 1.15f;
 	float runnerSpeed = 1.25f;
 
+
 	// Update blaster bolts if any
 	for (int i = 0; i < o_blasters.size(); i++)
 	{
 		if (o_blasters[i]->dead != true)
 			o_blasters.at(i)->Update();
 		else
+		{
+			// Roll if the blaster should explode
+			if (rand() % blasterFlashChance == 0)
+			{
+				float size = clamp((rand() % (int)(blasterFlashSizeMax * 1000)) / 1000.f, blasterFlashSizeMin, 5.f);	// Calculate the blaster explosion size
+				o_blasterFlashes.push_back(std::make_unique<BlasterFlash>(GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), size, 2U, true), o_blasters[i]->m_world));
+			}
+
+			// Delete the blaster
 			o_blasters.erase(o_blasters.begin() + i);
+		}
+	}
+
+	// Update the blaster explosons if any
+	for (int i = 0; i < o_blasterFlashes.size(); i++)
+	{
+		if (o_blasterFlashes[i]->dead != true)
+			o_blasterFlashes[i]->Update();
+		else
+			o_blasterFlashes.erase(o_blasterFlashes.begin() + i);
 	}
 
 	// Scene switch logic
@@ -150,6 +177,7 @@ void Game::Update(DX::StepTimer const& timer)
 			// flag that we shot and then go pewpew
 			runnerFrameShot = true;
 			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\BlasterRed.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_runner_world, m_stard_world, runnerSpread));
+			o_blasters.back()->lifetime = 0.6f;
 		}
 		else if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 1)
 			runnerFrameShot = false;
@@ -181,12 +209,22 @@ void Game::Render()
 	m_sky_fx->SetProjection(m_sky_proj);
 	m_sky->Draw(m_sky_fx.get(), m_inputLayout.Get());
 
+	m_blasterFlash_fx->SetView(m_view);
+	m_blasterFlash_fx->SetProjection(m_sky_proj);
+
 	// Draw models
 	m_stard->Draw(m_d3dContext.Get(), *m_states, m_stard_world, m_view, m_proj);
 	m_runner->Draw(m_d3dContext.Get(), *m_states, m_runner_world, m_view, m_proj);
 	
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model->Draw(m_d3dContext.Get(), *m_states, o_blasters[i]->m_world, m_view, m_proj);
+
+	for (int i = 0; i < o_blasterFlashes.size(); i++)
+	{
+		m_blasterFlash_fx->SetWorld(o_blasterFlashes[i]->world);
+		o_blasterFlashes[i]->mesh->Draw(m_blasterFlash_fx.get(), m_inputLayout.Get());
+	}
+		//o_blasterFlashes[i]->mesh->Draw(o_blasterFlashes[i]->world, m_view, m_proj);
 
 	// Draw debug text
 	if (debug)
@@ -376,6 +414,43 @@ void Game::CreateDevice()
 	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\SpaceShipTemp.cmo", *m_fxFactory, true);
 	m_runner_world = Matrix::Identity;
 
+	// Model light parameters
+	const DirectX::SimpleMath::Vector3 light1pos = Vector3(0.3, 0.3, -0.05);
+	const DirectX::SimpleMath::Vector3 light2pos = Vector3(0.35, -0.01, 0.5);
+
+	// Setup model lights with a lambda (oooooo arn't we fancy)
+	m_runner->UpdateEffects([light1pos, light2pos](IEffect* effect)
+	{
+		auto lights = dynamic_cast<IEffectLights*>(effect);
+		if (lights)
+		{
+			lights->SetLightingEnabled(true);
+			lights->SetPerPixelLighting(true);
+			lights->SetLightEnabled(0, true);
+			lights->SetLightEnabled(1, true);
+			lights->SetLightDiffuseColor(0, Colors::Azure);
+			lights->SetLightDirection(0, light1pos);
+			lights->SetLightDiffuseColor(1, Colors::Orange);
+			lights->SetLightDirection(1, light2pos);
+		}
+	});
+
+	m_stard->UpdateEffects([light1pos, light2pos](IEffect* effect)
+	{
+		auto lights = dynamic_cast<IEffectLights*>(effect);
+		if (lights)
+		{
+			lights->SetLightingEnabled(true);
+			lights->SetPerPixelLighting(true);
+			lights->SetLightEnabled(0, true);
+			lights->SetLightEnabled(1, true);
+			lights->SetLightDiffuseColor(0, Colors::Azure);
+			lights->SetLightDirection(0, light1pos);
+			lights->SetLightDiffuseColor(1, Colors::Orange);
+			lights->SetLightDirection(1, light2pos);
+		}
+	});
+
 	// Prep the skybox
 	if(debug)
 		DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"..\\..\\content\\Textures\\horizonsphere.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
@@ -391,6 +466,10 @@ void Game::CreateDevice()
 	m_sky_fx->SetFogEnabled(false);
 	m_sky_fx->SetTexture(m_sky_texture.Get());
 	m_sky->CreateInputLayout(m_sky_fx.get(), m_inputLayout.ReleaseAndGetAddressOf());
+
+	m_blasterFlash_fx = std::make_unique<BasicEffect>(m_d3dDevice.Get());
+	m_blasterFlash_fx->SetLightingEnabled(false);
+	m_blasterFlash_fx->SetTextureEnabled(false);
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -555,11 +634,14 @@ void Game::OnDeviceLost()
 	m_sky.reset();
 	m_sky_fx.reset();
 	m_sky_texture.Reset();
-	m_flash_texture.Reset();
 	m_inputLayout.Reset();
+	m_blasterFlash_fx.reset();
 
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model.reset();
+
+	for (int i = 0; i < o_blasterFlashes.size(); i++)
+		o_blasterFlashes[i]->mesh.reset();
 
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();
