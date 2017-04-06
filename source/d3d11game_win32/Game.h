@@ -95,9 +95,6 @@ private:
 	DirectX::SimpleMath::Matrix m_proj;
 	DirectX::SimpleMath::Vector2 m_fontPos;
 
-	DirectX::SimpleMath::Matrix m_view_title;
-	DirectX::SimpleMath::Matrix m_view_scene1;
-
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
 	std::unique_ptr<DirectX::SpriteFont> m_font;
@@ -119,4 +116,6 @@ private:
 	std::vector<DirectX::SimpleMath::Vector3> m_runner_turrents;
 
 	std::vector<std::unique_ptr<Blaster>> o_blasters;
+
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_flash_texture;
 };

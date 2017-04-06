@@ -59,7 +59,7 @@ void Game::Update(DX::StepTimer const& timer)
 {
     float elapsedTime = float(timer.GetElapsedSeconds());
 
-    // Custom game logic goes here
+    // Custom game logic goes past here
 	debugTime = timer.GetTotalSeconds();
 
 	float introPitch = -75.f; // Intro pitch angle (inverted)
@@ -135,21 +135,21 @@ void Game::Update(DX::StepTimer const& timer)
 
 			// flag that we shot and go pewpew
 			stardFrameShot = true;
-			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_stard_world, m_runner_world, stardSpread));
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_stard_world, m_runner_world, stardSpread));
 			o_blasters.back()->lifetime = 2.f;
 		}
 		else if ((int)(timer.GetTotalSeconds() * stardROF) % 2 == 1)
 			stardFrameShot = false;
 
-		// BLockade Runner shoot logic
+		// Blockade Runner shoot logic
 		if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 0 && !runnerFrameShot && shootChanceRollR == 0)
 		{
 			int turrentn = rand() % m_runner_turrents.size();
 			Vector3 v_turrent = m_runner_turrents[turrentn];
 
-			// flag that we shot and go pewpew
+			// flag that we shot and then go pewpew
 			runnerFrameShot = true;
-			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"BlasterRed.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_runner_world, m_stard_world, runnerSpread));
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\BlasterRed.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_runner_world, m_stard_world, runnerSpread));
 		}
 		else if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 1)
 			runnerFrameShot = false;
@@ -366,21 +366,21 @@ void Game::CreateDevice()
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
 
 	// Prep the text print objects
-	m_font = std::make_unique<SpriteFont>(m_d3dDevice.Get(), L"Arial_14_Regular.spritefont");
+	m_font = std::make_unique<SpriteFont>(m_d3dDevice.Get(), L"..\\..\\content\\Fonts\\Arial_14_Regular.spritefont");
 	m_spriteBatch = std::make_unique<SpriteBatch>(m_d3dContext.Get());
 
 	// Prep models
-	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"ProjStarD.cmo", *m_fxFactory, true);
+	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjStarD.cmo", *m_fxFactory, true);
 	m_stard_world = Matrix::Identity;
 
-	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"SpaceShipTemp.cmo", *m_fxFactory, true);
+	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\SpaceShipTemp.cmo", *m_fxFactory, true);
 	m_runner_world = Matrix::Identity;
 
 	// Prep the skybox
 	if(debug)
-		DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"horizonsphere.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
+		DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"..\\..\\content\\Textures\\horizonsphere.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
 	else
-		DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"Stars1HD.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
+		DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"..\\..\\content\\Textures\\Stars1HD.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
 
 	m_sky = GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), 100.f, 3U, false);
 	m_sky_world = Matrix::Identity;
@@ -554,6 +554,8 @@ void Game::OnDeviceLost()
 	m_runner.reset();
 	m_sky.reset();
 	m_sky_fx.reset();
+	m_sky_texture.Reset();
+	m_flash_texture.Reset();
 	m_inputLayout.Reset();
 
 	for (int i = 0; i < o_blasters.size(); i++)
