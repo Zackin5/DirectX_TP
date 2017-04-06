@@ -34,10 +34,10 @@ void Blaster::Update()
 {
 	lerpProgress += vdistance * speed * 0.001f;
 
-	Vector3 v_normal = v_origin - v_target;
+	Vector3 v_normal = v_target - v_origin;
 	v_normal.Normalize();
 
-	Matrix m_rotation = Matrix::CreateLookAt(Vector3::Zero, v_normal, Vector3::Up);
+	Matrix m_rotation = Matrix::CreateLookAt(Vector3::Zero, v_normal, Vector3::Down);
 	m_rotation.Transpose();
 
 	if (lerpProgress < lifetime)

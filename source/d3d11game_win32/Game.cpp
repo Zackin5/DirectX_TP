@@ -82,6 +82,10 @@ void Game::Update(DX::StepTimer const& timer)
 	float stardSpread = 50.f;
 	float runnerSpread = 25.f;
 
+	// Ships' movement speeds
+	float stardSpeed = 1.15f;
+	float runnerSpeed = 1.25f;
+
 	// Update blaster bolts if any
 	for (int i = 0; i < o_blasters.size(); i++)
 	{
@@ -151,8 +155,8 @@ void Game::Update(DX::StepTimer const& timer)
 			runnerFrameShot = false;
 
 		// Update ship world positions
-		m_runner_world = Matrix::CreateTranslation(Vector3(0.4f, 0.5f, 0.f)) * Matrix::CreateTranslation(Vector3::Forward * (timer.GetTotalSeconds() - t_panEnd) * 1.15);
-		m_stard_world = Matrix::CreateTranslation(Vector3(0.4f, 1.1f, 8.f)) * Matrix::CreateTranslation(Vector3::Forward * (timer.GetTotalSeconds() - t_panEnd) * 1.15);
+		m_runner_world = Matrix::CreateTranslation(Vector3(0.4f, 0.5f, 0.f)) * Matrix::CreateTranslation(Vector3::Forward * (timer.GetTotalSeconds() - t_panEnd) * runnerSpeed);
+		m_stard_world = Matrix::CreateTranslation(Vector3(0.4f, 1.1f, 8.f)) * Matrix::CreateTranslation(Vector3::Forward * (timer.GetTotalSeconds() - t_panEnd) * stardSpeed);
 	}
 
     elapsedTime;
