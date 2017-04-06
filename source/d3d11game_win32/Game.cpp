@@ -63,10 +63,11 @@ void Game::Update(DX::StepTimer const& timer)
 	debugTime = timer.GetTotalSeconds();
 
 	float introPitch = -75.f; // Intro pitch angle (inverted)
-	float t_panStart = -10.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
+	float t_panStart = -40.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
-	float t_scene3 = t_scene2 + 20.f; // Scene for the closeup hits on the blackade runner
+	float t_scene3 = t_scene2 + 12.f; // Scene for the closeup hits on the blackade runner
+	float t_dock = t_scene3 + 20.f;	// Scene for the docking/boarding
 
 	bool shipChasing = false; // Flag to perform the pursuit logic
 
@@ -143,8 +144,23 @@ void Game::Update(DX::StepTimer const& timer)
 	else if (timer.GetTotalSeconds() < t_scene3)
 	{
 		shipChasing = true;
+		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene2) * -0.8f));
 		m_view = Matrix::CreateTranslation(Vector3(-0.05f, -0.5f, 35.f)) * Matrix::CreateRotationY(degreeToRads(170.f));
 		debugState = 3;
+	}
+	else if (timer.GetTotalSeconds() < t_dock)
+	{
+		m_view = Matrix::CreateLookAt(Vector3(-0.3f, 0.4f, 1.f), Vector3::Zero, Vector3::UnitY);
+		m_stard_world = Matrix::CreateTranslation(Vector3::Backward * 10.f);
+		m_runner_world = Matrix::CreateTranslation(Vector3::Forward * 0.5f * (timer.GetTotalSeconds() - t_scene3 - 2.f));
+		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene3) * -2.2f)) * Matrix::CreateRotationX(degreeToRads((timer.GetTotalSeconds() - t_scene3) * -2.6f));
+		debugState = 4;
+
+		if (timer.GetTotalSeconds() > t_scene3 + 1.2f && timer.GetTotalSeconds() < t_scene3 + 1.8f)
+		{
+			float size = clamp((rand() % (int)(blasterFlashSizeMax * 800)) / 1000.f, 0.1f, 0.8f);	// Calculate the blaster explosion size
+			o_blasterFlashes.push_back(std::make_unique<BlasterFlash>(GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), size, 2U, true), Matrix::CreateTranslation(Vector3::Forward * 0.5f * (timer.GetTotalSeconds() - t_scene3 - 2.f)) ));
+		}
 	}
 
 	// Pursuit logic
@@ -411,7 +427,7 @@ void Game::CreateDevice()
 	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjStarD.cmo", *m_fxFactory, true);
 	m_stard_world = Matrix::Identity;
 
-	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\SpaceShipTemp.cmo", *m_fxFactory, true);
+	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjBlockade.cmo", *m_fxFactory, true);
 	m_runner_world = Matrix::Identity;
 
 	// Model light parameters
