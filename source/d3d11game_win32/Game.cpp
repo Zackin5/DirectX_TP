@@ -63,11 +63,12 @@ void Game::Update(DX::StepTimer const& timer)
 	debugTime = timer.GetTotalSeconds();
 
 	float introPitch = -75.f; // Intro pitch angle (inverted)
-	float t_panStart = -40.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
+	float t_panStart = -42.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
 	float t_scene3 = t_scene2 + 12.f; // Scene for the closeup hits on the blackade runner
-	float t_dock = t_scene3 + 20.f;	// Scene for the docking/boarding
+	float t_dock = t_scene3 + 3.f;	// Scene for the docking/boarding
+	float t_end = t_dock + 20.f;	// Scene for the ending
 
 	bool shipChasing = false; // Flag to perform the pursuit logic
 
@@ -156,11 +157,36 @@ void Game::Update(DX::StepTimer const& timer)
 		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene3) * -2.2f)) * Matrix::CreateRotationX(degreeToRads((timer.GetTotalSeconds() - t_scene3) * -2.6f));
 		debugState = 4;
 
-		if (timer.GetTotalSeconds() > t_scene3 + 1.2f && timer.GetTotalSeconds() < t_scene3 + 1.8f)
+		if (!disablingShot && timer.GetTotalSeconds() > t_scene3 + 1.0f)
 		{
-			float size = clamp((rand() % (int)(blasterFlashSizeMax * 800)) / 1000.f, 0.1f, 0.8f);	// Calculate the blaster explosion size
-			o_blasterFlashes.push_back(std::make_unique<BlasterFlash>(GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), size, 2U, true), Matrix::CreateTranslation(Vector3::Forward * 0.5f * (timer.GetTotalSeconds() - t_scene3 - 2.f)) ));
+			disablingShot = true;
+			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(Vector3(0.f, .8f, 2.f)), Matrix::CreateTranslation(Vector3::Forward * 0.5f * (timer.GetTotalSeconds() - t_scene3 - 0.8f)), 1.f));
+			o_blasters.back()->speed = 15.f;
 		}
+
+		if (!runnerExploded && timer.GetTotalSeconds() > t_scene3 + 1.6f)
+		{
+			float size = clamp((rand() % (int)(800)) / 1000.f, 0.1f, 0.4f);	// Calculate the explosion size
+			
+			// Randomized explosion vectors
+			float explosionX = (rand() % 400 - 200) / 1000.f;
+			float explosionY = (rand() % 400 - 200) / 1000.f;
+			float explosionZ = (rand() % 400 - 200) / 1000.f;
+
+			Matrix m_explosion = Matrix::CreateTranslation(Vector3::Forward * 0.5f * (timer.GetTotalSeconds() - t_scene3 - 1.8f)) * Matrix::CreateTranslation(Vector3(explosionX, explosionY, explosionZ)); // Calculate the explosion location
+
+			o_blasterFlashes.push_back(std::make_unique<BlasterFlash>(GeometricPrimitive::CreateGeoSphere(m_d3dContext.Get(), size, 2U, true), m_explosion ));
+
+			if (timer.GetTotalSeconds() > t_scene3 + 2.0f)
+				runnerExploded = true;
+		}
+	}
+	else if (timer.GetTotalSeconds() < t_end)
+	{
+		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene2) * -0.8f));
+		m_view = Matrix::CreateLookAt(Vector3(-0.5f, -1.0f, -2.f), Vector3::Zero, Vector3::UnitY);
+		m_runner_world = Matrix::CreateTranslation(Vector3::Backward * (timer.GetTotalSeconds() - t_dock) * 0.016f);
+		m_stard_world = Matrix::CreateTranslation(Vector3(0.f, 1.f, 3.f));
 	}
 
 	// Pursuit logic

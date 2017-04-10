@@ -90,6 +90,7 @@ private:
 	bool stardFrameShot = false;
 	bool runnerFrameShot = false;
 	bool runnerExploded = false;
+	bool disablingShot = false;
 
 	// Render pipeline stuff
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
