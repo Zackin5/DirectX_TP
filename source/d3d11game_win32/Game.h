@@ -104,16 +104,23 @@ private:
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 
 	// Resources
+	// Sky stuff
 	std::unique_ptr<DirectX::GeometricPrimitive> m_sky;
 	std::unique_ptr<DirectX::BasicEffect> m_sky_fx;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_sky_texture;
 	DirectX::SimpleMath::Matrix m_sky_world;
 	DirectX::SimpleMath::Matrix m_sky_proj;
 
+	// Title stuff
+	std::unique_ptr<DirectX::Model> m_title;
+	DirectX::SimpleMath::Matrix m_title_world;
+
+	// Star Destroyer stuff
 	std::unique_ptr<DirectX::Model> m_stard;
 	DirectX::SimpleMath::Matrix m_stard_world;
 	std::vector<DirectX::SimpleMath::Vector3> m_stard_turrents;
 
+	// Blockade Runner stuff
 	std::unique_ptr<DirectX::Model> m_runner;
 	DirectX::SimpleMath::Matrix m_runner_world;
 	std::vector<DirectX::SimpleMath::Vector3> m_runner_turrents;

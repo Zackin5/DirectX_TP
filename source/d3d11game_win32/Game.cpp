@@ -62,8 +62,9 @@ void Game::Update(DX::StepTimer const& timer)
     // Custom game logic goes past here
 	debugTime = timer.GetTotalSeconds();
 
-	float introPitch = -75.f; // Intro pitch angle (inverted)
-	float t_panStart = -42.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
+	float introPitch = -90.f; // Intro pitch angle (inverted)
+	float t_open = 0.f;
+	float t_panStart = t_open + 15.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
 	float t_scene3 = t_scene2 + 12.f; // Scene for the closeup hits on the blackade runner
@@ -94,7 +95,6 @@ void Game::Update(DX::StepTimer const& timer)
 	// Ships' movement speeds
 	float stardSpeed = 1.15f;
 	float runnerSpeed = 1.25f;
-
 
 	// Update blaster bolts if any
 	for (int i = 0; i < o_blasters.size(); i++)
@@ -127,6 +127,7 @@ void Game::Update(DX::StepTimer const& timer)
 	// Scene switch logic
 	if (timer.GetTotalSeconds() < t_panStart)
 	{
+		m_title_world = Matrix::CreateRotationX(degreeToRads(-90.f)) * Matrix::CreateTranslation(Vector3::Up * 1.5f) * Matrix::CreateTranslation(Vector3::Up * timer.GetTotalSeconds() * 1.5f);
 		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(introPitch));
 		debugState = 0;
 	}
@@ -257,6 +258,7 @@ void Game::Render()
 	// Draw models
 	m_stard->Draw(m_d3dContext.Get(), *m_states, m_stard_world, m_view, m_proj);
 	m_runner->Draw(m_d3dContext.Get(), *m_states, m_runner_world, m_view, m_proj);
+	m_title->Draw(m_d3dContext.Get(), *m_states, m_title_world, m_view, m_proj);
 	
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model->Draw(m_d3dContext.Get(), *m_states, o_blasters[i]->m_world, m_view, m_proj);
@@ -450,17 +452,23 @@ void Game::CreateDevice()
 	m_spriteBatch = std::make_unique<SpriteBatch>(m_d3dContext.Get());
 
 	// Prep models
+	// Star Destroyer
 	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjStarD.cmo", *m_fxFactory, true);
 	m_stard_world = Matrix::Identity;
 
+	// Blackade Runner
 	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjBlockade.cmo", *m_fxFactory, true);
 	m_runner_world = Matrix::Identity;
+
+	// Title
+	m_title = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\title.cmo", *m_fxFactory, true);
+	m_title_world = Matrix::Identity;
 
 	// Model light parameters
 	const DirectX::SimpleMath::Vector3 light1pos = Vector3(0.3, 0.3, -0.05);
 	const DirectX::SimpleMath::Vector3 light2pos = Vector3(0.35, -0.01, 0.5);
 
-	// Setup model lights with a lambda (oooooo arn't we fancy)
+	// Setup model lights with a lambda (oooooo aren't we fancy)
 	m_runner->UpdateEffects([light1pos, light2pos](IEffect* effect)
 	{
 		auto lights = dynamic_cast<IEffectLights*>(effect);
@@ -493,6 +501,19 @@ void Game::CreateDevice()
 		}
 	});
 
+	m_title->UpdateEffects([](IEffect* effect)
+	{
+		auto lights = dynamic_cast<IEffectLights*>(effect);
+		if (lights)
+		{
+			lights->SetLightingEnabled(true);
+			lights->SetAmbientLightColor(Colors::White);
+			lights->SetLightEnabled(0, false);
+			lights->SetLightEnabled(1, false);
+			lights->SetLightEnabled(2, false);
+		}
+	});
+
 	// Prep the skybox
 	if(debug)
 		DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"..\\..\\content\\Textures\\horizonsphere.png", nullptr, m_sky_texture.ReleaseAndGetAddressOf()));
@@ -509,6 +530,7 @@ void Game::CreateDevice()
 	m_sky_fx->SetTexture(m_sky_texture.Get());
 	m_sky->CreateInputLayout(m_sky_fx.get(), m_inputLayout.ReleaseAndGetAddressOf());
 
+	// Blaster fx
 	m_blasterFlash_fx = std::make_unique<BasicEffect>(m_d3dDevice.Get());
 	m_blasterFlash_fx->SetLightingEnabled(false);
 	m_blasterFlash_fx->SetTextureEnabled(false);
@@ -678,6 +700,7 @@ void Game::OnDeviceLost()
 	m_sky_texture.Reset();
 	m_inputLayout.Reset();
 	m_blasterFlash_fx.reset();
+	m_title.reset();
 
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model.reset();
