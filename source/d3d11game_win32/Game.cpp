@@ -72,7 +72,7 @@ void Game::Update(DX::StepTimer const& timer)
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
 	float t_scene3 = t_scene2 + 12.f; // Scene for the closeup hits on the blackade runner
 	float t_dock = t_scene3 + 3.f;	// Scene for the docking/boarding
-	float t_end = t_dock + 20.f;	// Scene for the ending
+	float t_end = t_dock + 10.f;	// Scene for the ending
 
 	bool shipChasing = false; // Flag to perform the pursuit logic
 
@@ -197,6 +197,8 @@ void Game::Update(DX::StepTimer const& timer)
 		m_runner_world = Matrix::CreateTranslation(Vector3::Backward * (timer.GetTotalSeconds() - t_dock) * 0.016f);
 		m_stard_world = Matrix::CreateTranslation(Vector3(0.f, 1.f, 3.f));
 	}
+	else
+		ExitGame();
 
 	// Pursuit logic
 	if (shipChasing)
