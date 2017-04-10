@@ -77,7 +77,7 @@ private:
 	// Renderer stuff
 	// Resolution (minimum is 320x200)
 	int windowX = 1280;
-	int windowY = 800;
+	int windowY = 720;
 	float renderrScale = 1.f; // Resolution scale multiplier, allows for supersampling or undersampling (altough the lack of filtering really makes the former look lacking)
 	int MSAALevel = 8; // MSAA Level, a value of 1 disables it
 
@@ -114,6 +114,9 @@ private:
 	// Title stuff
 	std::unique_ptr<DirectX::Model> m_title;
 	DirectX::SimpleMath::Matrix m_title_world;
+
+	std::unique_ptr<DirectX::Model> m_crawl;
+	DirectX::SimpleMath::Matrix m_crawl_world;
 
 	// Star Destroyer stuff
 	std::unique_ptr<DirectX::Model> m_stard;

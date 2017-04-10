@@ -63,8 +63,11 @@ void Game::Update(DX::StepTimer const& timer)
 	debugTime = timer.GetTotalSeconds();
 
 	float introPitch = -90.f; // Intro pitch angle (inverted)
+	float crawlAngle = 28.f; // angle of intro crawl text
+
+	// Scene timings
 	float t_open = 0.f;
-	float t_panStart = t_open + 15.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
+	float t_panStart = t_open + 79.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
 	float t_scene3 = t_scene2 + 12.f; // Scene for the closeup hits on the blackade runner
@@ -127,8 +130,13 @@ void Game::Update(DX::StepTimer const& timer)
 	// Scene switch logic
 	if (timer.GetTotalSeconds() < t_panStart)
 	{
-		m_title_world = Matrix::CreateRotationX(degreeToRads(-90.f)) * Matrix::CreateTranslation(Vector3::Up * 1.5f) * Matrix::CreateTranslation(Vector3::Up * timer.GetTotalSeconds() * 1.5f);
 		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(introPitch));
+
+		Vector3 v_crawlangle = Vector3::Transform(Vector3::Up, Matrix::CreateRotationX(degreeToRads(crawlAngle)));
+		v_crawlangle.Normalize();
+
+		m_title_world = Matrix::CreateRotationX(degreeToRads(-90.f)) * Matrix::CreateTranslation(Vector3::Up * 1.5f) * Matrix::CreateTranslation(Vector3::Up * timer.GetTotalSeconds() * 1.5f);
+		m_crawl_world = Matrix::CreateRotationX(degreeToRads(90.f + crawlAngle)) * Matrix::CreateTranslation(Vector3::Forward * 2.f) * Matrix::CreateTranslation(Vector3::Up * 1.f) * Matrix::CreateTranslation(v_crawlangle * (timer.GetTotalSeconds() - 15.f) * 0.25f);
 		debugState = 0;
 	}
 	else if (timer.GetTotalSeconds() < t_panEnd)
@@ -259,6 +267,7 @@ void Game::Render()
 	m_stard->Draw(m_d3dContext.Get(), *m_states, m_stard_world, m_view, m_proj);
 	m_runner->Draw(m_d3dContext.Get(), *m_states, m_runner_world, m_view, m_proj);
 	m_title->Draw(m_d3dContext.Get(), *m_states, m_title_world, m_view, m_proj);
+	m_crawl->Draw(m_d3dContext.Get(), *m_states, m_crawl_world, m_view, m_proj);
 	
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model->Draw(m_d3dContext.Get(), *m_states, o_blasters[i]->m_world, m_view, m_proj);
@@ -464,6 +473,9 @@ void Game::CreateDevice()
 	m_title = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\title.cmo", *m_fxFactory, true);
 	m_title_world = Matrix::Identity;
 
+	m_crawl = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\titlecrawl.cmo", *m_fxFactory, true);
+	m_crawl_world = Matrix::Identity;
+
 	// Model light parameters
 	const DirectX::SimpleMath::Vector3 light1pos = Vector3(0.3, 0.3, -0.05);
 	const DirectX::SimpleMath::Vector3 light2pos = Vector3(0.35, -0.01, 0.5);
@@ -511,6 +523,37 @@ void Game::CreateDevice()
 			lights->SetLightEnabled(0, false);
 			lights->SetLightEnabled(1, false);
 			lights->SetLightEnabled(2, false);
+		}
+
+		auto fog = dynamic_cast<IEffectFog*>(effect);
+		if (fog)
+		{
+			fog->SetFogEnabled(true);
+			fog->SetFogColor(Colors::Black);
+			fog->SetFogStart(18);
+			fog->SetFogEnd(22);
+		}
+	});
+
+	m_crawl->UpdateEffects([](IEffect* effect)
+	{
+		auto lights = dynamic_cast<IEffectLights*>(effect);
+		if (lights)
+		{
+			lights->SetLightingEnabled(true);
+			lights->SetAmbientLightColor(Colors::White);
+			lights->SetLightEnabled(0, false);
+			lights->SetLightEnabled(1, false);
+			lights->SetLightEnabled(2, false);
+		}
+
+		auto fog = dynamic_cast<IEffectFog*>(effect);
+		if (fog)
+		{
+			fog->SetFogEnabled(true);
+			fog->SetFogColor(Colors::Black);
+			fog->SetFogStart(9);
+			fog->SetFogEnd(10);
 		}
 	});
 
@@ -701,6 +744,7 @@ void Game::OnDeviceLost()
 	m_inputLayout.Reset();
 	m_blasterFlash_fx.reset();
 	m_title.reset();
+	m_crawl.reset();
 
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model.reset();
