@@ -576,7 +576,7 @@ void Game::CreateDevice()
 		if (lights)
 		{
 			lights->SetLightingEnabled(true);
-			lights->SetAmbientLightColor(Colors::White);
+			lights->SetAmbientLightColor(Colors::White * 1.2f);
 			lights->SetLightEnabled(0, false);
 			lights->SetLightEnabled(1, false);
 			lights->SetLightEnabled(2, false);
@@ -598,7 +598,7 @@ void Game::CreateDevice()
 		if (lights)
 		{
 			lights->SetLightingEnabled(true);
-			lights->SetAmbientLightColor(Colors::White);
+			lights->SetAmbientLightColor(Colors::White * 1.3f);
 			lights->SetLightEnabled(0, false);
 			lights->SetLightEnabled(1, false);
 			lights->SetLightEnabled(2, false);
