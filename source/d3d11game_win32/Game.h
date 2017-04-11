@@ -88,10 +88,14 @@ private:
 
 	// Runtime logic vars
 	bool drawPrelude = false;
+	bool drawTitle = false;
 	bool stardFrameShot = false;
 	bool runnerFrameShot = false;
 	bool runnerExploded = false;
 	bool disablingShot = false;
+	bool fadeout = false;
+	bool faded = false;
+	float fadeOutTime;
 
 	// Render pipeline stuff
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;

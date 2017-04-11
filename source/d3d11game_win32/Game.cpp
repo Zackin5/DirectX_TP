@@ -66,8 +66,8 @@ void Game::Update(DX::StepTimer const& timer)
 	float crawlAngle = 28.f; // angle of intro crawl text
 
 	// Scene timings
-	float t_open = 10.f;
-	float t_panStart = t_open + 79.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
+	float t_open = 10.f; // Should be 10
+	float t_panStart = t_open + 79.f; // What time does the credit pan-down start. Should be around 79 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
 	float t_scene3 = t_scene2 + 12.f; // Scene for the closeup hits on the blackade runner
@@ -135,6 +135,7 @@ void Game::Update(DX::StepTimer const& timer)
 	else if (timer.GetTotalSeconds() < t_panStart)
 	{
 		drawPrelude = false;
+		drawTitle = true;
 		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(introPitch));
 
 		Vector3 v_crawlangle = Vector3::Transform(Vector3::Up, Matrix::CreateRotationX(degreeToRads(crawlAngle)));
@@ -146,6 +147,7 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 	else if (timer.GetTotalSeconds() < t_panEnd)
 	{
+		drawTitle = false;
 		float deltaT = t_panStart - timer.GetTotalSeconds(); // I think this is actually calculating everything inverted but everything is working properly with this value so I'm gonna ignore it
 		
 		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(clamp(introPitch - deltaT * 8.f, introPitch, 0)));
@@ -200,10 +202,17 @@ void Game::Update(DX::StepTimer const& timer)
 		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene2) * -0.8f));
 		m_view = Matrix::CreateLookAt(Vector3(-0.5f, -1.0f, -2.f), Vector3::Zero, Vector3::UnitY);
 		m_runner_world = Matrix::CreateTranslation(Vector3::Backward * (timer.GetTotalSeconds() - t_dock) * 0.016f);
-		m_stard_world = Matrix::CreateTranslation(Vector3(0.f, 1.f, 3.f));
+		m_stard_world = Matrix::CreateTranslation(Vector3::Lerp(Vector3(0.f, 1.f, 3.f), Vector3(0,0,0), log((timer.GetTotalSeconds() - t_dock) / 5.f + 1.0f)));
 	}
 	else
-		ExitGame();
+	{
+		fadeOutTime = t_end;
+
+		if (faded)
+			ExitGame();
+		else
+			fadeout = true;
+	}
 
 	// Pursuit logic
 	if (shipChasing)
@@ -273,8 +282,12 @@ void Game::Render()
 	// Draw models
 	m_stard->Draw(m_d3dContext.Get(), *m_states, m_stard_world, m_view, m_proj);
 	m_runner->Draw(m_d3dContext.Get(), *m_states, m_runner_world, m_view, m_proj);
-	m_title->Draw(m_d3dContext.Get(), *m_states, m_title_world, m_view, m_proj);
-	m_crawl->Draw(m_d3dContext.Get(), *m_states, m_crawl_world, m_view, m_proj);
+
+	if (drawTitle)
+	{
+		m_title->Draw(m_d3dContext.Get(), *m_states, m_title_world, m_view, m_proj);
+		m_crawl->Draw(m_d3dContext.Get(), *m_states, m_crawl_world, m_view, m_proj);
+	}
 	
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model->Draw(m_d3dContext.Get(), *m_states, o_blasters[i]->m_world, m_view, m_proj);
@@ -289,6 +302,17 @@ void Game::Render()
 	// Draw debug text
 	m_spriteBatch->Begin();
 
+	// Ending fadeout
+	if (fadeout)
+	{
+		if (m_timer.GetTotalSeconds() - fadeOutTime > 1.f)
+			faded = true;
+
+		Color fadeTint = Color::Lerp(Color(0.f, 0.f, 0.f, 0.f), (Color)Colors::White, m_timer.GetTotalSeconds() - fadeOutTime);
+		m_spriteBatch->Draw(t_blackbg.Get(), m_fullscreenRect, fadeTint);
+	}
+
+	// Opening prelude rendering
 	if (drawPrelude)
 	{
 		// Draw the black background
