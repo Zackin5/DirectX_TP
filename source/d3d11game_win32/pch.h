@@ -15,28 +15,28 @@
 
 // DirectXTK Project Headers
 #include "CommonStates.h"
-#include "DDSTextureLoader.h"
-#include "DirectXHelpers.h"
+//#include "DDSTextureLoader.h"
+//#include "DirectXHelpers.h"
 #include "Effects.h"
 //#include "GamePad.h"
 #include "GeometricPrimitive.h"
-#include "GraphicsMemory.h"
+//#include "GraphicsMemory.h"
 //#include "Keyboard.h"
 #include "Model.h"
 //#include "Mouse.h"
 #include "PrimitiveBatch.h"
-#include "ScreenGrab.h"
+//#include "ScreenGrab.h"
 #include "SimpleMath.h"
 #include "SpriteBatch.h"
 #include "SpriteFont.h"
-#include "VertexTypes.h"
+//#include "VertexTypes.h"
 #include "WICTextureLoader.h"
 
 // Other stuff used
-#include <algorithm>
+//#include <algorithm>
 #include <sstream>
 #include <iomanip>
-#include <string>
+//#include <string>
 
 // Use the C++ standard templated min/max
 #define NOMINMAX
