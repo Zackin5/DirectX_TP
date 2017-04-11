@@ -87,6 +87,7 @@ private:
 	float debugTime;
 
 	// Runtime logic vars
+	bool drawPrelude = false;
 	bool stardFrameShot = false;
 	bool runnerFrameShot = false;
 	bool runnerExploded = false;
@@ -117,6 +118,13 @@ private:
 
 	std::unique_ptr<DirectX::Model> m_crawl;
 	DirectX::SimpleMath::Matrix m_crawl_world;
+
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> t_prelude;
+	DirectX::SimpleMath::Vector2 t_prelude_origin;
+	DirectX::SimpleMath::Vector2 t_prelude_screen;
+
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> t_blackbg;
+	RECT m_fullscreenRect;
 
 	// Star Destroyer stuff
 	std::unique_ptr<DirectX::Model> m_stard;

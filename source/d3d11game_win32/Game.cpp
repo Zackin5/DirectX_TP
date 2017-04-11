@@ -66,7 +66,7 @@ void Game::Update(DX::StepTimer const& timer)
 	float crawlAngle = 28.f; // angle of intro crawl text
 
 	// Scene timings
-	float t_open = 0.f;
+	float t_open = 10.f;
 	float t_panStart = t_open + 79.f; // What time does the credit pan-down start. Should be around 89 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
@@ -128,15 +128,20 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 
 	// Scene switch logic
-	if (timer.GetTotalSeconds() < t_panStart)
+	if (timer.GetTotalSeconds() < t_open)
 	{
+		drawPrelude = true;
+	}
+	else if (timer.GetTotalSeconds() < t_panStart)
+	{
+		drawPrelude = false;
 		m_view = Matrix::CreateTranslation(Vector3::Down * 0.f) * Matrix::CreateRotationX(degreeToRads(introPitch));
 
 		Vector3 v_crawlangle = Vector3::Transform(Vector3::Up, Matrix::CreateRotationX(degreeToRads(crawlAngle)));
 		v_crawlangle.Normalize();
 
-		m_title_world = Matrix::CreateRotationX(degreeToRads(-90.f)) * Matrix::CreateTranslation(Vector3::Up * 1.5f) * Matrix::CreateTranslation(Vector3::Up * timer.GetTotalSeconds() * 1.5f);
-		m_crawl_world = Matrix::CreateRotationX(degreeToRads(90.f + crawlAngle)) * Matrix::CreateTranslation(Vector3::Forward * 2.f) * Matrix::CreateTranslation(Vector3::Up * 1.f) * Matrix::CreateTranslation(v_crawlangle * (timer.GetTotalSeconds() - 15.f) * 0.25f);
+		m_title_world = Matrix::CreateRotationX(degreeToRads(-90.f)) * Matrix::CreateTranslation(Vector3::Up * 1.5f) * Matrix::CreateTranslation(Vector3::Up * (timer.GetTotalSeconds() - t_open) * 1.5f);
+		m_crawl_world = Matrix::CreateRotationX(degreeToRads(90.f + crawlAngle)) * Matrix::CreateTranslation(Vector3::Forward * 2.f) * Matrix::CreateTranslation(Vector3::Up * 1.f) * Matrix::CreateTranslation(v_crawlangle * (timer.GetTotalSeconds() - t_open - 15.f) * 0.25f);
 		debugState = 0;
 	}
 	else if (timer.GetTotalSeconds() < t_panEnd)
@@ -282,14 +287,26 @@ void Game::Render()
 		//o_blasterFlashes[i]->mesh->Draw(o_blasterFlashes[i]->world, m_view, m_proj);
 
 	// Draw debug text
+	m_spriteBatch->Begin();
+
+	if (drawPrelude)
+	{
+		// Draw the black background
+		m_spriteBatch->Draw(t_blackbg.Get(), m_fullscreenRect);
+
+		// Draw bluetext prelude
+		Color preludeTint = Colors::White * (cosf(m_timer.GetTotalSeconds() / 2.5f + 1.f) * -1.5f);
+		m_spriteBatch->Draw(t_prelude.Get(), t_prelude_screen, nullptr, preludeTint, 0.f, t_prelude_origin, 0.5f);
+	}
+
+	// Draw debug info if it's enabled
 	if (debug)
 	{
-		m_spriteBatch->Begin();
 		std::wostringstream infoTxt;
 		infoTxt << std::setprecision(4) << L"Total seconds: " << debugTime << L"\nCurrent scene: " << debugState;
 		m_font->DrawString(m_spriteBatch.get(), infoTxt.str().c_str(), m_fontPos, Colors::White);
-		m_spriteBatch->End();
 	}
+	m_spriteBatch->End();
 
     Present();
 }
@@ -467,7 +484,7 @@ void Game::CreateDevice()
 	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjStarD.cmo", *m_fxFactory, true);
 	m_stard_world = Matrix::Identity;
 
-	// Blackade Runner
+	// Blockade Runner
 	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjBlockade.cmo", *m_fxFactory, true);
 	m_runner_world = Matrix::Identity;
 
@@ -477,6 +494,20 @@ void Game::CreateDevice()
 
 	m_crawl = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\titlecrawl.cmo", *m_fxFactory, true);
 	m_crawl_world = Matrix::Identity;
+
+	ComPtr<ID3D11Resource> resource;
+
+	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"..\\..\\content\\Textures\\longtime.png", resource.GetAddressOf(), t_prelude.ReleaseAndGetAddressOf()));
+	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"..\\..\\content\\Textures\\theywantedblacksoigavethemblack.png", nullptr, t_blackbg.ReleaseAndGetAddressOf()));
+
+	ComPtr<ID3D11Texture2D> prelude;
+	DX::ThrowIfFailed(resource.As(&prelude));
+
+	CD3D11_TEXTURE2D_DESC preludeDesc;
+	prelude->GetDesc(&preludeDesc);
+
+	t_prelude_origin.x = float(preludeDesc.Width / 2);
+	t_prelude_origin.y = float(preludeDesc.Height / 2);
 
 	// Model light parameters
 	const DirectX::SimpleMath::Vector3 light1pos = Vector3(0.3, 0.3, -0.05);
@@ -716,6 +747,15 @@ void Game::CreateResources()
 	m_stard_world = Matrix::CreateTranslation(Vector3::Backward * 100.f);
 	m_runner_world = Matrix::CreateTranslation(Vector3::Backward * 100.f);
 
+	// Prelude center position
+	t_prelude_screen.x = backBufferWidth / 2.f;
+	t_prelude_screen.y = backBufferHeight / 2.f;
+
+	m_fullscreenRect.left = 0;
+	m_fullscreenRect.top = 0;
+	m_fullscreenRect.right = backBufferWidth;
+	m_fullscreenRect.bottom = backBufferHeight;
+
 	// Push our turrent origin vectors values to the array
 	// Blender axis: X, Z, Y
 
@@ -747,6 +787,8 @@ void Game::OnDeviceLost()
 	m_blasterFlash_fx.reset();
 	m_title.reset();
 	m_crawl.reset();
+	t_prelude.Reset();
+	t_blackbg.Reset();
 
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model.reset();
