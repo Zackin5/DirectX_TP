@@ -276,6 +276,7 @@ void Game::Render()
 	m_sky_fx->SetProjection(m_sky_proj);
 	m_sky->Draw(m_sky_fx.get(), m_inputLayout.Get());
 
+	// Put the blaster explosions into the sky projection
 	m_blasterFlash_fx->SetView(m_view);
 	m_blasterFlash_fx->SetProjection(m_sky_proj);
 
@@ -283,21 +284,23 @@ void Game::Render()
 	m_stard->Draw(m_d3dContext.Get(), *m_states, m_stard_world, m_view, m_proj);
 	m_runner->Draw(m_d3dContext.Get(), *m_states, m_runner_world, m_view, m_proj);
 
+	// Only draw the opening titles when we need too
 	if (drawTitle)
 	{
 		m_title->Draw(m_d3dContext.Get(), *m_states, m_title_world, m_view, m_proj);
 		m_crawl->Draw(m_d3dContext.Get(), *m_states, m_crawl_world, m_view, m_proj);
 	}
 	
+	// Draw all of our balsterrsss
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model->Draw(m_d3dContext.Get(), *m_states, o_blasters[i]->m_world, m_view, m_proj);
 
+	// Draw all of our blaster explosionssss
 	for (int i = 0; i < o_blasterFlashes.size(); i++)
 	{
 		m_blasterFlash_fx->SetWorld(o_blasterFlashes[i]->world);
 		o_blasterFlashes[i]->mesh->Draw(m_blasterFlash_fx.get(), m_inputLayout.Get());
 	}
-		//o_blasterFlashes[i]->mesh->Draw(o_blasterFlashes[i]->world, m_view, m_proj);
 
 	// Draw debug text
 	m_spriteBatch->Begin();
@@ -305,9 +308,11 @@ void Game::Render()
 	// Ending fadeout
 	if (fadeout)
 	{
+		// Flag if we're done
 		if (m_timer.GetTotalSeconds() - fadeOutTime > 1.f)
 			faded = true;
 
+		// Lerp the fade colour then render it
 		Color fadeTint = Color::Lerp(Color(0.f, 0.f, 0.f, 0.f), (Color)Colors::White, m_timer.GetTotalSeconds() - fadeOutTime);
 		m_spriteBatch->Draw(t_blackbg.Get(), m_fullscreenRect, fadeTint);
 	}
@@ -495,7 +500,7 @@ void Game::CreateDevice()
 	// TODO: Initialize device dependent objects here (independent of window size).
 #pragma endregion
 
-// Custom code past here
+	// Custom code past here
 	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
 
