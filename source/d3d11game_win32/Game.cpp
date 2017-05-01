@@ -24,6 +24,7 @@ Game::Game() :
 {
 }
 
+
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
 {
@@ -395,6 +396,7 @@ void Game::OnResuming()
 
     // TODO: Game is being power-resumed (or returning from minimize).
 }
+
 
 void Game::OnWindowSizeChanged(int width, int height)
 {
@@ -798,7 +800,33 @@ void Game::CreateResources()
 
 	// Blockade runner
 	m_runner_turrents.push_back(Vector3(0.f , 0.1f, 0.4f));
+
+	// audio work
+	m_kazoo.reset(new SoundEffect(m_audEngine.get(), L"StarWarsKazoo.wav"));
+
+	m_kazooloop = m_kazoo->CreateInstance();
+	m_kazooloop->Play(true);
+
+	if (m_retryAudio)
+	{
+		m_retryAudio = false;
+
+		if (m_audEngine->Reset())
+		{
+			// TODO: restart any looped sounds here
+			if (m_kazooloop)
+				m_kazooloop->Play(true);
+		}
+	}
+
+	if (m_audEngine)
+	{
+		m_audEngine->Suspend();
+	}
+
+	m_kazooloop.reset();
 }
+
 
 void Game::OnDeviceLost()
 {

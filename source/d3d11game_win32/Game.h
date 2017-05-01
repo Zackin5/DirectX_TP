@@ -145,4 +145,11 @@ private:
 	std::vector<std::unique_ptr<BlasterFlash>> o_blasterFlashes;
 
 	std::unique_ptr<DirectX::BasicEffect> m_blasterFlash_fx;
+
+	// audio 
+	std::unique_ptr<DirectX::SoundEffect> m_kazoo;
+	std::unique_ptr<DirectX::SoundEffectInstance> m_kazooloop;
+
+	std::unique_ptr<AudioEngine> m_audEngine;
+	std::unique_ptr<AudioEngine> m_retryAudio;
 };

@@ -74,4 +74,12 @@
   <ItemGroup>
     <Manifest Include="..\..\source\d3d11game_win32\settings.manifest" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\..\..\..\final project for 4330\StarWarsKazoo.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\..\..\..\..\..\..\final project for 4330\StarWarsTestFile.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

@@ -69,6 +69,12 @@
 #include <memory>
 #include <stdexcept>
 
+// audio
+#include <random>
+#include <Audio.h>
+#include <mmsystem.h>
+
+
 namespace DX
 {
     inline void ThrowIfFailed(HRESULT hr)
