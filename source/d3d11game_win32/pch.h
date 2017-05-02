@@ -71,8 +71,6 @@
 
 // audio
 #include <random>
-#include <Audio.h>
-#include <mmsystem.h>
 
 
 namespace DX

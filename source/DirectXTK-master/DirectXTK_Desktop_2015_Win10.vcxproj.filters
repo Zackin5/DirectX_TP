@@ -257,6 +257,7 @@
     <ClCompile Include="Src\SimpleMath.cpp">
       <Filter>Src\Shared</Filter>
     </ClCompile>
+    <ClCompile Include="Inc\Audio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\CompileShaders.cmd">

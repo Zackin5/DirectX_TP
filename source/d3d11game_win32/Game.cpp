@@ -256,6 +256,20 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 
     elapsedTime;
+
+	// audio work 
+
+	if (m_retryAudio)
+	{
+		m_retryAudio = false;
+
+		if (m_audEngine->Reset())
+		{
+			// TODO: restart any looped sounds here
+			if (m_kazooloop)
+				m_kazooloop->Play(true);
+		}
+	}
 }
 
 // Draws the scene.
@@ -525,6 +539,10 @@ void Game::CreateDevice()
 
 	m_crawl = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\titlecrawl.cmo", *m_fxFactory, true);
 	m_crawl_world = Matrix::Identity;
+
+	// Audio work
+	m_kazooloop = m_kazoo->CreateInstance();
+	m_kazooloop->Play(true);
 
 	ComPtr<ID3D11Resource> resource;
 
@@ -804,21 +822,12 @@ void Game::CreateResources()
 	// audio work
 	m_kazoo.reset(new SoundEffect(m_audEngine.get(), L"StarWarsKazoo.wav"));
 
-	m_kazooloop = m_kazoo->CreateInstance();
-	m_kazooloop->Play(true);
+}
 
-	if (m_retryAudio)
-	{
-		m_retryAudio = false;
+// audio work
 
-		if (m_audEngine->Reset())
-		{
-			// TODO: restart any looped sounds here
-			if (m_kazooloop)
-				m_kazooloop->Play(true);
-		}
-	}
-
+Game::~Game()
+{
 	if (m_audEngine)
 	{
 		m_audEngine->Suspend();
@@ -826,7 +835,6 @@ void Game::CreateResources()
 
 	m_kazooloop.reset();
 }
-
 
 void Game::OnDeviceLost()
 {
