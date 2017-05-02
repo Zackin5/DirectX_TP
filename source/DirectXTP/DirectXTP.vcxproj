@@ -186,11 +186,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="LazerShoots.wav" />
-    <Media Include="StarWarsKazoo.wav">
-      <DeploymentContent>false</DeploymentContent>
-    </Media>
-    <Media Include="StarWarsTestFile.wav" />
+    <Media Include="..\..\content\Audio\StarWarsKazoo.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

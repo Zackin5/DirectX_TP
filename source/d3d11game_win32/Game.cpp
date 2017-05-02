@@ -23,13 +23,15 @@ Game::Game() :
     m_featureLevel(D3D_FEATURE_LEVEL_9_1)
 {
 }
+
 Game::~Game()
 {
-	if (m_audEngine)
-	{
-		m_audEngine->Suspend();
-	}
+    if (m_audEngine)
+    {
+        m_audEngine->Suspend();
+    }
 }
+
 
 
 
@@ -107,6 +109,22 @@ void Game::Update(DX::StepTimer const& timer)
 	// Ships' movement speeds
 	float stardSpeed = 1.15f;
 	float runnerSpeed = 1.25f;
+
+    // Update the audio engine, but first check to see if we need to restart the audio
+    if (m_restartAudio)
+    {
+        m_restartAudio = false;
+        if (m_audEngine->Reset())
+        {
+            // Restart any looped sounds here
+            m_kazooplayer->Resume();
+        }
+    }
+    else if (!m_audEngine->Update())
+    {
+        if (m_audEngine->IsCriticalError())
+            m_restartAudio = true;
+    }
 
 	// Update blaster bolts if any
 	for (int i = 0; i < o_blasters.size(); i++)
@@ -349,7 +367,6 @@ void Game::Render()
     Present();
 }
 
-
 // Helper method to clear the back buffers.
 void Game::Clear()
 {
@@ -397,6 +414,7 @@ void Game::OnDeactivated()
 void Game::OnSuspending()
 {
     // TODO: Game is being power-suspended (or minimized).
+    m_audEngine->Suspend();
 }
 
 void Game::OnResuming()
@@ -404,6 +422,7 @@ void Game::OnResuming()
     m_timer.ResetElapsedTime();
 
     // TODO: Game is being power-resumed (or returning from minimize).
+    m_audEngine->Resume();
 }
 
 
@@ -536,18 +555,16 @@ void Game::CreateDevice()
 	m_crawl_world = Matrix::Identity;
 
 	// Audio work
-
-	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
 	AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
 #ifdef _DEBUG
 	eflags = eflags | AudioEngine_Debug;
 #endif
 	m_audEngine = std::make_unique<AudioEngine>(eflags);
+    m_restartAudio = false;
 
 	m_kazoo = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\StarWarsKazoo.wav");
-	auto m_kazooplayer = m_kazoo->CreateInstance();
-	m_kazooplayer->Play(true);
+    m_kazooplayer = m_kazoo->CreateInstance();
+    m_kazooplayer->Play(true);
 
 	ComPtr<ID3D11Resource> resource;
 
@@ -844,17 +861,16 @@ void Game::OnDeviceLost()
 	m_crawl.reset();
 	t_prelude.Reset();
 	t_blackbg.Reset();
-	
 
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model.reset();
 
 	for (int i = 0; i < o_blasterFlashes.size(); i++)
 		o_blasterFlashes[i]->mesh.reset();
-	
+
 	if (m_audEngine)
 		m_audEngine->Suspend();
-	
+
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();
     m_swapChain1.Reset();

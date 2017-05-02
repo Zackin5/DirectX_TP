@@ -70,7 +70,6 @@
 #include <memory>
 #include <stdexcept>
 
-
 // audio
 #include <random>
 
