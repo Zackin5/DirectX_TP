@@ -148,7 +148,6 @@ private:
 	//audio
 	std::unique_ptr<DirectX::AudioEngine> m_audEngine;
 	std::unique_ptr<DirectX::SoundEffect> m_kazoo;
-	std::unique_ptr<DirectX::SoundEffectInstance> m_kazooloop;
 
 
 };

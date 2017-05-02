@@ -256,22 +256,6 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 
     elapsedTime;
-
-	// audio work 
-
-	bool m_retryAudio = true;	// this is kinda pointless so w/e
-
-	if (m_retryAudio)
-	{
-		m_retryAudio = false;
-
-		if (m_audEngine->Reset())
-		{
-			// TODO: restart any looped sounds here
-			if (m_kazooloop)
-				m_kazooloop->Play(true);
-		}
-	}
 }
 
 // Draws the scene.
@@ -543,8 +527,15 @@ void Game::CreateDevice()
 	m_crawl_world = Matrix::Identity;
 
 	// Audio work
-	m_kazooloop = m_kazoo->CreateInstance();
-	m_kazooloop->Play(true);
+	AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
+#ifdef _DEBUG
+	eflags = eflags | AudioEngine_Debug;
+#endif
+	m_audEngine = std::make_unique<AudioEngine>(eflags);
+
+	m_kazoo = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\StarWarsKazoo.wav");
+	auto m_kazooplayer = m_kazoo->CreateInstance();
+	m_kazooplayer->Play(true);
 
 	ComPtr<ID3D11Resource> resource;
 
@@ -822,18 +813,8 @@ void Game::CreateResources()
 	m_runner_turrents.push_back(Vector3(0.f , 0.1f, 0.4f));
 
 	// audio work
-	m_kazoo.reset(new SoundEffect(m_audEngine.get(), L"StarWarsKazoo.wav"));
+	//m_kazoo.reset(new SoundEffect(m_audEngine.get(), L"..\\..\\content\\Audio\\StarWarsKazoo.wav"));
 
-}
-
-// audio work
-
-Game::~Game()
-{
-	if (m_audEngine)
-	{
-		m_audEngine->Suspend();
-	}
 }
 
 void Game::OnDeviceLost()
@@ -854,13 +835,15 @@ void Game::OnDeviceLost()
 	m_crawl.reset();
 	t_prelude.Reset();
 	t_blackbg.Reset();
-	m_kazooloop.reset();
 
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model.reset();
 
 	for (int i = 0; i < o_blasterFlashes.size(); i++)
 		o_blasterFlashes[i]->mesh.reset();
+
+	if (m_audEngine)
+		m_audEngine->Suspend();
 
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();

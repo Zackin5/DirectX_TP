@@ -186,8 +186,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\..\..\..\..\..\..\final project for 4330\StarWarsKazoo.wav" />
-    <Media Include="..\..\..\..\..\..\..\final project for 4330\StarWarsTestFile.wav" />
+    <Media Include="..\..\content\Audio\StarWarsKazoo.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
