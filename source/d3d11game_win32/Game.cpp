@@ -580,7 +580,7 @@ void Game::CreateDevice()
 	m_kazooplayer->Play();
 
 	// audio shoots 
-	m_shoot = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\LazerShoots.wav");
+	m_shoot = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\Pew-04.wav");
 
 	std::random_device rd;
 	m_LazerShoot.reset(new std::mt19937(rd()));
