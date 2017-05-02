@@ -75,7 +75,13 @@
     <Manifest Include="..\..\source\d3d11game_win32\settings.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\..\content\Audio\StarWarsKazoo.wav">
+    <Media Include="StarWarsTestFile.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="StarWarsKazoo.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="LazerShoots.wav">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>
