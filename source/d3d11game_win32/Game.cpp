@@ -24,6 +24,14 @@ Game::Game() :
 {
 }
 
+Game::~Game()
+{
+    if (m_audEngine)
+    {
+        m_audEngine->Suspend();
+    }
+}
+
 
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
@@ -99,6 +107,22 @@ void Game::Update(DX::StepTimer const& timer)
 	// Ships' movement speeds
 	float stardSpeed = 1.15f;
 	float runnerSpeed = 1.25f;
+
+    // Update the audio engine, but first check to see if we need to restart the audio
+    if (m_restartAudio)
+    {
+        m_restartAudio = false;
+        if (m_audEngine->Reset())
+        {
+            // Restart any looped sounds here
+            m_kazooplayer->Resume();
+        }
+    }
+    else if (!m_audEngine->Update())
+    {
+        if (m_audEngine->IsCriticalError())
+            m_restartAudio = true;
+    }
 
 	// Update blaster bolts if any
 	for (int i = 0; i < o_blasters.size(); i++)
@@ -388,6 +412,7 @@ void Game::OnDeactivated()
 void Game::OnSuspending()
 {
     // TODO: Game is being power-suspended (or minimized).
+    m_audEngine->Suspend();
 }
 
 void Game::OnResuming()
@@ -395,6 +420,7 @@ void Game::OnResuming()
     m_timer.ResetElapsedTime();
 
     // TODO: Game is being power-resumed (or returning from minimize).
+    m_audEngine->Resume();
 }
 
 
@@ -532,10 +558,11 @@ void Game::CreateDevice()
 	eflags = eflags | AudioEngine_Debug;
 #endif
 	m_audEngine = std::make_unique<AudioEngine>(eflags);
+    m_restartAudio = false;
 
 	m_kazoo = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\StarWarsKazoo.wav");
-	auto m_kazooplayer = m_kazoo->CreateInstance();
-	m_kazooplayer->Play(true);
+    m_kazooplayer = m_kazoo->CreateInstance();
+    m_kazooplayer->Play(true);
 
 	ComPtr<ID3D11Resource> resource;
 
@@ -811,9 +838,6 @@ void Game::CreateResources()
 
 	// Blockade runner
 	m_runner_turrents.push_back(Vector3(0.f , 0.1f, 0.4f));
-
-	// audio work
-	//m_kazoo.reset(new SoundEffect(m_audEngine.get(), L"..\\..\\content\\Audio\\StarWarsKazoo.wav"));
 
 }
 

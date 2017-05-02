@@ -20,6 +20,7 @@ class Game
 public:
 
     Game();
+    ~Game();
 
     // Initialization and management
     void Initialize(HWND window, int width, int height);
@@ -148,6 +149,7 @@ private:
 	//audio
 	std::unique_ptr<DirectX::AudioEngine> m_audEngine;
 	std::unique_ptr<DirectX::SoundEffect> m_kazoo;
-
+    std::unique_ptr<DirectX::SoundEffectInstance> m_kazooplayer;
+    bool m_restartAudio;
 
 };
