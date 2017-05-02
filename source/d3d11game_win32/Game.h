@@ -20,6 +20,7 @@ class Game
 public:
 
     Game();
+	~Game();
 
     // Initialization and management
     void Initialize(HWND window, int width, int height);
@@ -146,8 +147,16 @@ private:
 	std::unique_ptr<DirectX::BasicEffect> m_blasterFlash_fx;	
 
 	//audio
+
 	std::unique_ptr<DirectX::AudioEngine> m_audEngine;
 	std::unique_ptr<DirectX::SoundEffect> m_kazoo;
+	std::unique_ptr<DirectX::SoundEffectInstance> m_kazooplayer;
+	bool m_restartAudio;
 
+	// audio for the shooots 
+
+	std::unique_ptr<DirectX::SoundEffect> m_shoot;
+	std::unique_ptr<std::mt19937> m_LazerShoot;
+	float shootDelay;
 
 };
