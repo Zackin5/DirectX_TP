@@ -1,0 +1,35 @@
+\documentclass[a4paper]{scrartcl}
+
+%\setkomafont{disposition}{\mdseries\rmfamily} %Unbolds title
+\setkomafont{disposition}{\bfseries} %Serif font
+\setkomafont{subtitle}{\rmfamily} %Unbold subtitle
+\setkomafont{section}{\bfseries} %Bolded sections
+\setkomafont{subsection}{\bfseries} %Bolded sections
+
+\renewcommand*{\thesection}{Problem~\arabic{section}} %"Problem" prefix to sections
+\renewcommand*{\thesubsection}{\alph{subsection}} %Letter subsectioning
+
+\RedeclareSectionCommand[afterskip=-.5em]{subsection} %No after-subsection linebreak
+
+
+\title{Title}
+\subtitle{CLSS 1234}
+%\date{2013-09-01}
+\author{Jace Regenbrecht}
+
+
+\begin{document}
+\maketitle
+
+\section{}
+\subsection{} 
+This is a thing
+
+\subsection{} 
+This is another thing
+
+%\bibliographystyle{plain}
+%\bibliography{Biblio}
+
+\end{document}
+
