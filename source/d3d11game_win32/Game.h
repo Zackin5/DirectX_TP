@@ -12,7 +12,6 @@
 #include "..\DirectXTP\Blaster.h"
 #include "..\DirectXTP\BlasterFlash.h"
 #include "..\DirectXTP\Maths.h"
-//#include "Audio.h"
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -147,6 +146,7 @@ private:
 	std::unique_ptr<DirectX::BasicEffect> m_blasterFlash_fx;	
 
 	//audio
+	std::unique_ptr<DirectX::AudioEngine> m_audEngine;
 	std::unique_ptr<DirectX::SoundEffect> m_kazoo;
 	std::unique_ptr<DirectX::SoundEffectInstance> m_kazooloop;
 

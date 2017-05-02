@@ -10,7 +10,7 @@
 #pragma once
 
 #include <WinSDKVer.h>
-#define _WIN32_WINNT 0x0600
+#define _WIN32_WINNT 0x0602
 #include <SDKDDKVer.h>
 
 // DirectXTK Project Headers
@@ -31,6 +31,7 @@
 #include "SpriteFont.h"
 //#include "VertexTypes.h"
 #include "WICTextureLoader.h"
+#include <Audio.h>
 
 // Other stuff used
 //#include <algorithm>

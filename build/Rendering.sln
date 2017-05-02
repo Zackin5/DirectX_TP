@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK_Desktop_2015_Win10", "..\source\DirectXTK-master\DirectXTK_Desktop_2015_Win10.vcxproj", "{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTP", "..\source\DirectXTP\DirectXTP.vcxproj", "{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTKAudio_Desktop_2015_Win8", "..\source\DirectXTK-master\Audio\DirectXTKAudio_Desktop_2015_Win8.vcxproj", "{4F150A30-CECB-49D1-8283-6A3F57438CF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,14 @@ Global
 		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Release|Win32.Build.0 = Release|Win32
 		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Release|x64.ActiveCfg = Release|x64
 		{973CA11F-1C5B-4976-A19A-A150BCD8CF9D}.Release|x64.Build.0 = Release|x64
+		{4F150A30-CECB-49D1-8283-6A3F57438CF5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4F150A30-CECB-49D1-8283-6A3F57438CF5}.Debug|Win32.Build.0 = Debug|Win32
+		{4F150A30-CECB-49D1-8283-6A3F57438CF5}.Debug|x64.ActiveCfg = Debug|x64
+		{4F150A30-CECB-49D1-8283-6A3F57438CF5}.Debug|x64.Build.0 = Debug|x64
+		{4F150A30-CECB-49D1-8283-6A3F57438CF5}.Release|Win32.ActiveCfg = Release|Win32
+		{4F150A30-CECB-49D1-8283-6A3F57438CF5}.Release|Win32.Build.0 = Release|Win32
+		{4F150A30-CECB-49D1-8283-6A3F57438CF5}.Release|x64.ActiveCfg = Release|x64
+		{4F150A30-CECB-49D1-8283-6A3F57438CF5}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

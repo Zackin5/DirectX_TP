@@ -259,6 +259,8 @@ void Game::Update(DX::StepTimer const& timer)
 
 	// audio work 
 
+	bool m_retryAudio = true;	// this is kinda pointless so w/e
+
 	if (m_retryAudio)
 	{
 		m_retryAudio = false;
@@ -832,8 +834,6 @@ Game::~Game()
 	{
 		m_audEngine->Suspend();
 	}
-
-	m_kazooloop.reset();
 }
 
 void Game::OnDeviceLost()
@@ -854,6 +854,7 @@ void Game::OnDeviceLost()
 	m_crawl.reset();
 	t_prelude.Reset();
 	t_blackbg.Reset();
+	m_kazooloop.reset();
 
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model.reset();
