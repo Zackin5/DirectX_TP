@@ -228,7 +228,7 @@ void Game::Update(DX::StepTimer const& timer)
 		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene2) * -0.8f));
 		m_view = Matrix::CreateLookAt(Vector3(-0.5f, -1.0f, -2.f), Vector3::Zero, Vector3::UnitY);
 		m_runner_world = Matrix::CreateTranslation(Vector3::Backward * (timer.GetTotalSeconds() - t_dock) * 0.016f);
-		m_stard_world = Matrix::CreateTranslation(Vector3::Lerp(Vector3(0.f, 1.f, 3.f), Vector3(0,0,0), log((timer.GetTotalSeconds() - t_dock) / 5.f + 1.0f)));
+		m_stard_world = Matrix::CreateTranslation(Vector3::Lerp(Vector3(0.f, 2.f, 5.f), Vector3(0.f,0.4f,2.0f), log((timer.GetTotalSeconds() - t_dock) / 5.f + 0.9f)));
 	}
 	else
 	{
@@ -547,11 +547,11 @@ void Game::CreateDevice()
 
 	// Prep models
 	// Star Destroyer
-	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjStarD.cmo", *m_fxFactory, true);
+	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\AaronStarD.cmo", *m_fxFactory, true);
 	m_stard_world = Matrix::Identity;
 
 	// Blockade Runner
-	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjBlockade.cmo", *m_fxFactory, true);
+	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\TantiveIV.cmo", *m_fxFactory, true);
 	m_runner_world = Matrix::Identity;
 
 	// Title
@@ -857,12 +857,12 @@ void Game::CreateResources()
 	// Blender axis: X, Z, Y
 
 	// Stardestroyer
-	m_stard_turrents.push_back(Vector3(0.68f, 0.f, -2.8f));
-	m_stard_turrents.push_back(Vector3(-0.68f, 0.f, -2.8f));
-	m_stard_turrents.push_back(Vector3(1.5f, 0.f, -1.2f));
-	m_stard_turrents.push_back(Vector3(-1.5f, 0.f, -1.2f));
-	m_stard_turrents.push_back(Vector3(0.3f, -0.3f, -1.0f));
-	m_stard_turrents.push_back(Vector3(-0.3f, -0.3f, -1.0f));
+	m_stard_turrents.push_back(Vector3(0.2f, 0.f, -4.1f));
+	m_stard_turrents.push_back(Vector3(-0.2f, 0.f, -4.1f));
+	m_stard_turrents.push_back(Vector3(0.6f, 0.f, -2.6f));
+	m_stard_turrents.push_back(Vector3(-0.6f, 0.f, -2.6f));
+	m_stard_turrents.push_back(Vector3(0.3f, -0.1f, -0.1f));
+	m_stard_turrents.push_back(Vector3(-0.3f, -0.1f, -0.1f));
 
 	// Blockade runner
 	m_runner_turrents.push_back(Vector3(0.f , 0.1f, 0.4f));
