@@ -166,7 +166,7 @@ void Game::Update(DX::StepTimer const& timer)
 		v_crawlangle.Normalize();
 
 		m_title_world = Matrix::CreateRotationX(degreeToRads(-90.f)) * Matrix::CreateTranslation(Vector3::Up * 1.5f) * Matrix::CreateTranslation(Vector3::Up * (timer.GetTotalSeconds() - t_open) * 1.5f);
-		m_crawl_world = Matrix::CreateRotationX(degreeToRads(90.f + crawlAngle)) * Matrix::CreateTranslation(Vector3::Forward * 2.f) * Matrix::CreateTranslation(Vector3::Up * 1.f) * Matrix::CreateTranslation(v_crawlangle * (timer.GetTotalSeconds() - t_open - 15.f) * 0.25f);
+		m_crawl_world = Matrix::CreateRotationX(degreeToRads(90.f + crawlAngle)) * Matrix::CreateTranslation(Vector3::Forward * 2.f) * Matrix::CreateTranslation(Vector3::Up * 1.f) * Matrix::CreateTranslation(v_crawlangle * (timer.GetTotalSeconds() - t_open - 15.f) * 0.3f);
 		debugState = 0;
 	}
 	else if (timer.GetTotalSeconds() < t_panEnd)
