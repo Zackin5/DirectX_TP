@@ -23,6 +23,14 @@ Game::Game() :
     m_featureLevel(D3D_FEATURE_LEVEL_9_1)
 {
 }
+Game::~Game()
+{
+	if (m_audEngine)
+	{
+		m_audEngine->Suspend();
+	}
+}
+
 
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
@@ -67,7 +75,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 	// Scene timings
 	float t_open = 10.f; // Should be 10
-	float t_panStart = t_open + 79.f; // What time does the credit pan-down start. Should be around 79 for accuracy, plus bluetext time
+	float t_panStart = t_open + 70.f; // What time does the credit pan-down start. Should be around 79 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
 	float t_scene3 = t_scene2 + 12.f; // Scene for the closeup hits on the blackade runner
@@ -98,6 +106,22 @@ void Game::Update(DX::StepTimer const& timer)
 	// Ships' movement speeds
 	float stardSpeed = 1.15f;
 	float runnerSpeed = 1.25f;
+
+	// Update the audio engine, but first check to see if we need to restart the audio
+	if (m_restartAudio)
+	{
+		m_restartAudio = false;
+		if (m_audEngine->Reset())
+		{
+			// Restart any looped sounds here
+			m_kazooplayer->Resume();
+		}
+	}
+	else if (!m_audEngine->Update())
+	{
+		if (m_audEngine->IsCriticalError())
+			m_restartAudio = true;
+	}
 
 	// Update blaster bolts if any
 	for (int i = 0; i < o_blasters.size(); i++)
@@ -142,7 +166,7 @@ void Game::Update(DX::StepTimer const& timer)
 		v_crawlangle.Normalize();
 
 		m_title_world = Matrix::CreateRotationX(degreeToRads(-90.f)) * Matrix::CreateTranslation(Vector3::Up * 1.5f) * Matrix::CreateTranslation(Vector3::Up * (timer.GetTotalSeconds() - t_open) * 1.5f);
-		m_crawl_world = Matrix::CreateRotationX(degreeToRads(90.f + crawlAngle)) * Matrix::CreateTranslation(Vector3::Forward * 2.f) * Matrix::CreateTranslation(Vector3::Up * 1.f) * Matrix::CreateTranslation(v_crawlangle * (timer.GetTotalSeconds() - t_open - 15.f) * 0.25f);
+		m_crawl_world = Matrix::CreateRotationX(degreeToRads(90.f + crawlAngle)) * Matrix::CreateTranslation(Vector3::Forward * 2.f) * Matrix::CreateTranslation(Vector3::Up * 1.f) * Matrix::CreateTranslation(v_crawlangle * (timer.GetTotalSeconds() - t_open - 15.f) * 0.3f);
 		debugState = 0;
 	}
 	else if (timer.GetTotalSeconds() < t_panEnd)
@@ -173,13 +197,18 @@ void Game::Update(DX::StepTimer const& timer)
 		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene3) * -2.2f)) * Matrix::CreateRotationX(degreeToRads((timer.GetTotalSeconds() - t_scene3) * -2.6f));
 		debugState = 4;
 
+		// Shoot disabling shot
 		if (!disablingShot && timer.GetTotalSeconds() > t_scene3 + 1.0f)
 		{
 			disablingShot = true;
 			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(Vector3(0.f, .8f, 2.f)), Matrix::CreateTranslation(Vector3::Forward * 0.5f * (timer.GetTotalSeconds() - t_scene3 - 0.8f)), 1.f));
 			o_blasters.back()->speed = 15.f;
+
+			m_player = m_thereyougo->CreateInstance();
+			m_player->Play();
 		}
 
+		// Do explosion effects
 		if (!runnerExploded && timer.GetTotalSeconds() > t_scene3 + 1.6f)
 		{
 			float size = clamp((rand() % (int)(800)) / 1000.f, 0.1f, 0.4f);	// Calculate the explosion size
@@ -202,7 +231,7 @@ void Game::Update(DX::StepTimer const& timer)
 		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene2) * -0.8f));
 		m_view = Matrix::CreateLookAt(Vector3(-0.5f, -1.0f, -2.f), Vector3::Zero, Vector3::UnitY);
 		m_runner_world = Matrix::CreateTranslation(Vector3::Backward * (timer.GetTotalSeconds() - t_dock) * 0.016f);
-		m_stard_world = Matrix::CreateTranslation(Vector3::Lerp(Vector3(0.f, 1.f, 3.f), Vector3(0,0,0), log((timer.GetTotalSeconds() - t_dock) / 5.f + 1.0f)));
+		m_stard_world = Matrix::CreateTranslation(Vector3::Lerp(Vector3(0.f, 2.f, 5.f), Vector3(0.f,0.4f,2.0f), log((timer.GetTotalSeconds() - t_dock) / 5.f + 0.9f)));
 	}
 	else
 	{
@@ -231,6 +260,9 @@ void Game::Update(DX::StepTimer const& timer)
 			stardFrameShot = true;
 			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_stard_world, m_runner_world, stardSpread));
 			o_blasters.back()->lifetime = 2.f;
+
+			std::uniform_int_distribution<unsigned int> dist2(0, 2);
+			m_shoots->Play(dist2(*m_LazerShoot));
 		}
 		else if ((int)(timer.GetTotalSeconds() * stardROF) % 2 == 1)
 			stardFrameShot = false;
@@ -245,6 +277,9 @@ void Game::Update(DX::StepTimer const& timer)
 			runnerFrameShot = true;
 			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\BlasterRed.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_runner_world, m_stard_world, runnerSpread));
 			o_blasters.back()->lifetime = 0.6f;
+
+			std::uniform_int_distribution<unsigned int> dist2(0, 2);
+			m_shoots->Play(dist2(*m_LazerShoot));
 		}
 		else if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 1)
 			runnerFrameShot = false;
@@ -340,6 +375,7 @@ void Game::Render()
     Present();
 }
 
+
 // Helper method to clear the back buffers.
 void Game::Clear()
 {
@@ -394,7 +430,11 @@ void Game::OnResuming()
     m_timer.ResetElapsedTime();
 
     // TODO: Game is being power-resumed (or returning from minimize).
+	m_audEngine->Resume();
+
+	shootDelay = 99.f;
 }
+
 
 void Game::OnWindowSizeChanged(int width, int height)
 {
@@ -510,11 +550,11 @@ void Game::CreateDevice()
 
 	// Prep models
 	// Star Destroyer
-	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjStarD.cmo", *m_fxFactory, true);
+	m_stard = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\AaronStarD.cmo", *m_fxFactory, true);
 	m_stard_world = Matrix::Identity;
 
 	// Blockade Runner
-	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\ProjBlockade.cmo", *m_fxFactory, true);
+	m_runner = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\TantiveIV.cmo", *m_fxFactory, true);
 	m_runner_world = Matrix::Identity;
 
 	// Title
@@ -523,6 +563,32 @@ void Game::CreateDevice()
 
 	m_crawl = Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\titlecrawl.cmo", *m_fxFactory, true);
 	m_crawl_world = Matrix::Identity;
+
+	// Audio work
+
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+	AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
+#ifdef _DEBUG
+	eflags = eflags | AudioEngine_Debug;
+#endif
+	m_audEngine = std::make_unique<AudioEngine>(eflags);
+
+	m_kazoo = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\StarWarsKazoo.wav");
+	m_kazooplayer = m_kazoo->CreateInstance();
+	m_kazooplayer->Play();
+
+	// audio shoots 
+
+	m_shoots.reset(new WaveBank(m_audEngine.get(), L"..\\..\\content\\Audio\\shootssounds.xwb"));
+
+	std::random_device rd;
+	m_LazerShoot.reset(new std::mt19937(rd()));
+
+	shootDelay = 99.f;
+
+	m_thereyougo = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\thereyougo.wav");
+
 
 	ComPtr<ID3D11Resource> resource;
 
@@ -789,15 +855,16 @@ void Game::CreateResources()
 	// Blender axis: X, Z, Y
 
 	// Stardestroyer
-	m_stard_turrents.push_back(Vector3(0.68f, 0.f, -2.8f));
-	m_stard_turrents.push_back(Vector3(-0.68f, 0.f, -2.8f));
-	m_stard_turrents.push_back(Vector3(1.5f, 0.f, -1.2f));
-	m_stard_turrents.push_back(Vector3(-1.5f, 0.f, -1.2f));
-	m_stard_turrents.push_back(Vector3(0.3f, -0.3f, -1.0f));
-	m_stard_turrents.push_back(Vector3(-0.3f, -0.3f, -1.0f));
+	m_stard_turrents.push_back(Vector3(0.2f, 0.f, -4.1f));
+	m_stard_turrents.push_back(Vector3(-0.2f, 0.f, -4.1f));
+	m_stard_turrents.push_back(Vector3(0.6f, 0.f, -2.6f));
+	m_stard_turrents.push_back(Vector3(-0.6f, 0.f, -2.6f));
+	m_stard_turrents.push_back(Vector3(0.3f, -0.1f, -0.1f));
+	m_stard_turrents.push_back(Vector3(-0.3f, -0.1f, -0.1f));
 
 	// Blockade runner
 	m_runner_turrents.push_back(Vector3(0.f , 0.1f, 0.4f));
+
 }
 
 void Game::OnDeviceLost()
@@ -818,13 +885,17 @@ void Game::OnDeviceLost()
 	m_crawl.reset();
 	t_prelude.Reset();
 	t_blackbg.Reset();
+	
 
 	for (int i = 0; i < o_blasters.size(); i++)
 		o_blasters[i]->model.reset();
 
 	for (int i = 0; i < o_blasterFlashes.size(); i++)
 		o_blasterFlashes[i]->mesh.reset();
-
+	
+	if (m_audEngine)
+		m_audEngine->Suspend();
+	
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();
     m_swapChain1.Reset();
