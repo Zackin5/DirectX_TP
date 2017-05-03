@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{directxtk}
+Microsoft.
+\newblock Directx tool kit.
+\newblock \url{https://github.com/Microsoft/DirectXTK}.
+
+\bibitem{directxtkwiki}
+Microsoft.
+\newblock Directx tool kit wiki.
+\newblock \url{https://github.com/Microsoft/DirectXTK/wiki}.
+
+\bibitem{d3dtemplate}
+Chuck Walbourn.
+\newblock Direct3d game vs project templates.
+\newblock \url{https://github.com/walbourn/directx-vs-templates}.
+
+\end{thebibliography}

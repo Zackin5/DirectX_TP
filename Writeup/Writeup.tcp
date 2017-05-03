@@ -6,7 +6,7 @@ Version=4
 MainFile=Writeup.tex
 UseBibTeX=0
 UseMakeIndex=0
-ActiveProfile=LaTeX ⇨ PS ⇨ PDF
+ActiveProfile=LuaLaTeX ⇨ PDF
 ProjectLanguage=en
 ProjectDialect=US
 
