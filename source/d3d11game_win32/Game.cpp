@@ -203,6 +203,9 @@ void Game::Update(DX::StepTimer const& timer)
 			disablingShot = true;
 			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(Vector3(0.f, .8f, 2.f)), Matrix::CreateTranslation(Vector3::Forward * 0.5f * (timer.GetTotalSeconds() - t_scene3 - 0.8f)), 1.f));
 			o_blasters.back()->speed = 15.f;
+
+			m_player = m_thereyougo->CreateInstance();
+			m_player->Play();
 		}
 
 		// Do explosion effects
@@ -576,14 +579,6 @@ void Game::CreateDevice()
 	m_kazooplayer->Play();
 
 	// audio shoots 
-	/*
-	m_shoot = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\Pew-04.wav");
-
-	std::random_device rd;
-	m_LazerShoot.reset(new std::mt19937(rd()));
-
-	shootDelay = 99.f;
-	*/
 
 	m_shoots.reset(new WaveBank(m_audEngine.get(), L"..\\..\\content\\Audio\\shootssounds.xwb"));
 
@@ -591,6 +586,9 @@ void Game::CreateDevice()
 	m_LazerShoot.reset(new std::mt19937(rd()));
 
 	shootDelay = 99.f;
+
+	m_thereyougo = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\thereyougo.wav");
+
 
 	ComPtr<ID3D11Resource> resource;
 
