@@ -75,7 +75,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 	// Scene timings
 	float t_open = 10.f; // Should be 10
-	float t_panStart = t_open + 79.f; // What time does the credit pan-down start. Should be around 79 for accuracy, plus bluetext time
+	float t_panStart = t_open + 70.f; // What time does the credit pan-down start. Should be around 79 for accuracy, plus bluetext time
 	float t_panEnd = t_panStart + 10.f; // What time does the pan end
 	float t_scene2 = t_panEnd + 20.f; // Scene for the head-on view of the chase
 	float t_scene3 = t_scene2 + 12.f; // Scene for the closeup hits on the blackade runner
@@ -121,30 +121,6 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		if (m_audEngine->IsCriticalError())
 			m_restartAudio = true;
-	}
-
-
-	// audio shoots
-	/*
-	shootDelay -= elapsedTime;
-	if (shootDelay < 0.f)
-	{
-		m_shoot->Play();
-
-		std::uniform_real_distribution<float> dist(1.f, 4.f);
-		shootDelay = dist(*m_LazerShoot);
-	}
-	*/
-
-	shootDelay -= elapsedTime;
-	if (shootDelay < 0.f)
-	{
-			std::uniform_int_distribution<unsigned int> dist2(0, 2);
-			m_shoots->Play(dist2(*m_LazerShoot));
-
-			std::uniform_real_distribution<float> dist(1.f, 3.f);
-			shootDelay = dist(*m_LazerShoot);
-
 	}
 
 	// Update blaster bolts if any
@@ -221,6 +197,7 @@ void Game::Update(DX::StepTimer const& timer)
 		m_sky_world = Matrix::CreateRotationY(degreeToRads((timer.GetTotalSeconds() - t_scene3) * -2.2f)) * Matrix::CreateRotationX(degreeToRads((timer.GetTotalSeconds() - t_scene3) * -2.6f));
 		debugState = 4;
 
+		// Shoot disabling shot
 		if (!disablingShot && timer.GetTotalSeconds() > t_scene3 + 1.0f)
 		{
 			disablingShot = true;
@@ -228,6 +205,7 @@ void Game::Update(DX::StepTimer const& timer)
 			o_blasters.back()->speed = 15.f;
 		}
 
+		// Do explosion effects
 		if (!runnerExploded && timer.GetTotalSeconds() > t_scene3 + 1.6f)
 		{
 			float size = clamp((rand() % (int)(800)) / 1000.f, 0.1f, 0.4f);	// Calculate the explosion size
@@ -279,6 +257,9 @@ void Game::Update(DX::StepTimer const& timer)
 			stardFrameShot = true;
 			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\Blaster.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_stard_world, m_runner_world, stardSpread));
 			o_blasters.back()->lifetime = 2.f;
+
+			std::uniform_int_distribution<unsigned int> dist2(0, 2);
+			m_shoots->Play(dist2(*m_LazerShoot));
 		}
 		else if ((int)(timer.GetTotalSeconds() * stardROF) % 2 == 1)
 			stardFrameShot = false;
@@ -293,6 +274,9 @@ void Game::Update(DX::StepTimer const& timer)
 			runnerFrameShot = true;
 			o_blasters.push_back(std::make_unique<Blaster>(Model::CreateFromCMO(m_d3dDevice.Get(), L"..\\..\\content\\Models\\BlasterRed.cmo", *m_fxFactory, true), Matrix::CreateTranslation(v_turrent) * m_runner_world, m_stard_world, runnerSpread));
 			o_blasters.back()->lifetime = 0.6f;
+
+			std::uniform_int_distribution<unsigned int> dist2(0, 2);
+			m_shoots->Play(dist2(*m_LazerShoot));
 		}
 		else if ((int)(timer.GetTotalSeconds() * runnerROF) % 2 == 1)
 			runnerFrameShot = false;
