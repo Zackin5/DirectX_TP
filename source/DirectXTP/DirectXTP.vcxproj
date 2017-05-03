@@ -157,6 +157,8 @@
     <Image Include="..\d3d11game_win32\icon1.ico" />
     <Image Include="..\d3d11game_win32\icon2.ico" />
     <Image Include="directx.ico" />
+    <Image Include="icon1.ico" />
+    <Image Include="icon2.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\d3d11game_win32\Game.cpp" />
@@ -173,6 +175,7 @@
     <ClInclude Include="Blaster.h" />
     <ClInclude Include="BlasterFlash.h" />
     <ClInclude Include="Maths.h" />
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="..\..\source\d3d11game_win32\settings.manifest" />
@@ -186,11 +189,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="LazerShoots.wav" />
-    <Media Include="StarWarsKazoo.wav">
-      <DeploymentContent>false</DeploymentContent>
-    </Media>
-    <Media Include="StarWarsTestFile.wav" />
+    <ResourceCompile Include="res.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

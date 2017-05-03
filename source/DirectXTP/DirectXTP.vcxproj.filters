@@ -30,6 +30,12 @@
     <Image Include="directx.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icon2.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\d3d11game_win32\Game.cpp">
@@ -70,19 +76,16 @@
     <ClInclude Include="BlasterFlash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="..\..\source\d3d11game_win32\settings.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="StarWarsTestFile.wav">
+    <ResourceCompile Include="res.rc">
       <Filter>Resource Files</Filter>
-    </Media>
-    <Media Include="StarWarsKazoo.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
-    <Media Include="LazerShoots.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
