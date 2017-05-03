@@ -125,15 +125,27 @@ void Game::Update(DX::StepTimer const& timer)
 
 
 	// audio shoots
+	/*
 	shootDelay -= elapsedTime;
 	if (shootDelay < 0.f)
 	{
 		m_shoot->Play();
 
-		std::uniform_real_distribution<float> dist(1.f, 10.f);
+		std::uniform_real_distribution<float> dist(1.f, 4.f);
 		shootDelay = dist(*m_LazerShoot);
 	}
+	*/
 
+	shootDelay -= elapsedTime;
+	if (shootDelay < 0.f)
+	{
+			std::uniform_int_distribution<unsigned int> dist2(0, 2);
+			m_shoots->Play(dist2(*m_LazerShoot));
+
+			std::uniform_real_distribution<float> dist(1.f, 3.f);
+			shootDelay = dist(*m_LazerShoot);
+
+	}
 
 	// Update blaster bolts if any
 	for (int i = 0; i < o_blasters.size(); i++)
@@ -580,7 +592,16 @@ void Game::CreateDevice()
 	m_kazooplayer->Play();
 
 	// audio shoots 
+	/*
 	m_shoot = std::make_unique<SoundEffect>(m_audEngine.get(), L"..\\..\\content\\Audio\\Pew-04.wav");
+
+	std::random_device rd;
+	m_LazerShoot.reset(new std::mt19937(rd()));
+
+	shootDelay = 99.f;
+	*/
+
+	m_shoots.reset(new WaveBank(m_audEngine.get(), L"..\\..\\content\\Audio\\shootssounds.xwb"));
 
 	std::random_device rd;
 	m_LazerShoot.reset(new std::mt19937(rd()));

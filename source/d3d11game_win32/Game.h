@@ -154,9 +154,15 @@ private:
 	bool m_restartAudio;
 
 	// audio for the shooots 
-
+	/*
 	std::unique_ptr<DirectX::SoundEffect> m_shoot;
 	std::unique_ptr<std::mt19937> m_LazerShoot;
 	float shootDelay;
+	*/
+
+	std::unique_ptr<DirectX::WaveBank> m_shoots;
+	std::unique_ptr<std::mt19937> m_LazerShoot;
+	float shootDelay;
+	
 
 };
