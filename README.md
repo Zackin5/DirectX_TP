@@ -2,7 +2,7 @@
 
 ## Application Descirption
 
-Our application is a two-minute short animation recreating the Star Wars: A New Hope opening scene. The animation opens with the famous Star Wars title crawl before panning down at the 1-minute mark to reveal the ensuring chase scene. Around the two minute mark the scene switches to a closeup of the rebel cruiser being disabled by a shot from the star destroyer, allowing it to be captured and ending the animation.
+Our application is a two-minute short animation recreating the Star Wars: A New Hope opening scene. The animation opens with the famous Star Wars title crawl before panning down at the 1-minute mark to reveal the ensuring chase scene. Around the two minute mark the scene switches to a closeup of the rebel cruiser being disabled by a shot from the star destroyer, allowing it to be captured and ending the animation. A recording of the final project is available for viewing on [YouTube](https://www.youtube.com/watch?v=9TK0RuRcAbQ).
 
 ## Program Status
 
